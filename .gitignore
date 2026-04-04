@@ -5,18 +5,18 @@ Obj/
 Build/
 UserSettings/
 
-UserSettings/
-
 MemoryCaptures/
 Recordings/
 
 .idea/
 .vscode/
+.vs/
 .gradle/
 
 *.csproj
 *.unityproj
 *.sln
+*.slnx
 *.suo
 *.tmp
 *.user
