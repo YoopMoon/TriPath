@@ -3,22 +3,30 @@ using UnityEngine.InputSystem;
 
 public class ControllerPlayer : MonoBehaviour
 {
-    // velocidad de movimiento horizontal y fuerza del salto
-    // los dejo públicos para poder tocarlos desde el inspector sin recompilar
-    public float runSpeed = 2f;
+    [Header("Movement")]
+    public float moveSpeed = 2f;
     public float jumpForce = 3f;
+
+    [Header("Jump Feel")]
+    public bool enhancedJump = true;
+    public float fallGravityMultiplier = 0.5f; // cuánto más rápido cae al bajar
+    public float jumpCutMultiplier = 1f;        // cuánto se corta el salto al soltar el botón
+    private bool jumpPressed;
 
     private Rigidbody2D rb;
     private Vector2 moveInput;
-    private bool jumpPressed;
+    private InputAction jumpAction;
+
+    public SpriteRenderer spriteRenderer;
+    public Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-    }
 
-    // estos métodos los llama automáticamente el Player Input
-    // según las acciones que definí en el Input Actions Asset
+        // busco la acción Jump directamente desde el PlayerInput del objeto
+        jumpAction = GetComponent<PlayerInput>().actions["Jump"];
+    }
 
     void OnMove(InputValue value)
     {
@@ -27,23 +35,50 @@ public class ControllerPlayer : MonoBehaviour
 
     void OnJump(InputValue value)
     {
-        // guardo si el botón está pulsado para procesarlo en FixedUpdate
-        // no lo gestiono aquí directamente porque las físicas van en FixedUpdate
-        jumpPressed = value.isPressed;
+        // solo registro el salto si está en el suelo en el momento de pulsar
+        if (value.isPressed && GroundChecker.isGrounded)
+            jumpPressed = true;
     }
 
     void FixedUpdate()
     {
-        // muevo el personaje en X manteniendo la velocidad en Y que ya lleva
-        // si no hago esto, la gravedad y el salto dejan de funcionar bien
-        rb.linearVelocity = new Vector2(moveInput.x * runSpeed, rb.linearVelocity.y);
+        // movimiento horizontal, mantengo la velocidad vertical que ya lleva
+        rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
 
-        // solo salto si el jugador ha pulsado el botón Y está tocando el suelo
-        // la comprobación de suelo la hace un script auxiliar con un trigger en los pies
-        if (jumpPressed && GroundChecker.isGrounded)
+        // actualizo la dirección del sprite solo si hay movimiento, para mantener la última posición al soltar
+        if (moveInput.x != 0)
+            spriteRenderer.flipX = moveInput.x < 0;
+
+        // activo la animación de correr solo si hay input horizontal y está en el suelo
+        animator.SetBool("Run", moveInput.x != 0 && GroundChecker.isGrounded);
+
+        // salto: consumo jumpPressed siempre para evitar saltos pendientes al aterrizar
+        if (jumpPressed)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            jumpPressed = false; // reseteo para que no salte otra vez en el siguiente frame
+            jumpPressed = false;
+        }
+
+        // animaciones de salto y caída según velocidad vertical y si está en el suelo
+        bool isFalling = rb.linearVelocity.y < 0f && !GroundChecker.isGrounded;
+        animator.SetBool("Jump", !GroundChecker.isGrounded && !isFalling);
+        animator.SetBool("Fall", isFalling);
+
+        if (enhancedJump)
+        {
+            // leo el estado del botón aquí directamente para evitar desfases con el callback
+            bool jumpHeld = jumpAction.IsPressed();
+
+            if (rb.linearVelocity.y < 0f)
+            {
+                // cayendo: aplico gravedad extra para que la caída se sienta más pesada
+                rb.linearVelocity += Vector2.up * Physics2D.gravity.y * fallGravityMultiplier * Time.fixedDeltaTime;
+            }
+            else if (rb.linearVelocity.y > 0f && !jumpHeld)
+            {
+                // subiendo pero soltó el botón: corto el salto con gravedad extra
+                rb.linearVelocity += Vector2.up * Physics2D.gravity.y * jumpCutMultiplier * Time.fixedDeltaTime;
+            }
         }
     }
 }
