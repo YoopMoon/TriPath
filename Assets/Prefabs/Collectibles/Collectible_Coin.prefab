@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc2ea0eb0e60d1140982e5494a0d7f07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
+  collectibleType: 1
 --- !u!1 &5619318294832295380
 GameObject:
   m_ObjectHideFlags: 0
