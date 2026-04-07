@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ControllerPlayer : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     public float moveSpeed = 2f;

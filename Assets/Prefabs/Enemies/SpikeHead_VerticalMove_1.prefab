@@ -185,7 +185,7 @@ GameObject:
   - component: {fileID: 4161873461952999562}
   - component: {fileID: 636674446662156240}
   m_Layer: 0
-  m_Name: SpikeHead_VerticalMove
+  m_Name: SpikeHead_VerticalMove_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
