@@ -7,9 +7,9 @@ public class FallingPlatform : MonoBehaviour
     private Vector3 originalPosition;
     private bool isResetting = false;
 
-    [SerializeField] private float delayToGoDown = 2f;
+    [SerializeField] private float delayToGoDown = 1f;
     [SerializeField] private float delayToReset = 3f;
-    [SerializeField] public float returnSpeed = 2f;
+    [SerializeField] public float returnSpeed = 3f;
 
     void Start()
     {
@@ -49,6 +49,7 @@ public class FallingPlatform : MonoBehaviour
         // Espera y cae (quita solo el freeze de Y)
         yield return new WaitForSeconds(delayToGoDown);
         rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+
         // Espera y vuelve despacio
         yield return new WaitForSeconds(delayToReset);
         rb.constraints = RigidbodyConstraints2D.FreezeAll;

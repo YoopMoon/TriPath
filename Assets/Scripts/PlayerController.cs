@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     public float moveSpeed = 2f;
-    public float jumpForce = 3f;
+    public float jumpForce = 4f;
 
     [Header("Jump Feel")]
     public bool enhancedJump = true;
