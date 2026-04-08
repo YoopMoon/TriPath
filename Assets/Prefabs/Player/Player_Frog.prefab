@@ -67,7 +67,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0051502, y: -0.1623263}
+  m_Offset: {x: 0.0029999614, y: -0.15570825}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -77,7 +77,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.01642504, y: 0.003088}
+  m_Size: {x: 0.034001946, y: 0.0031403303}
   m_EdgeRadius: 0
 --- !u!114 &608327977085107610
 MonoBehaviour:
@@ -104,8 +104,9 @@ GameObject:
   - component: {fileID: 6960591132351920463}
   - component: {fileID: 7857426562191135594}
   - component: {fileID: 6324891557348267882}
-  - component: {fileID: 7124025958890296495}
   - component: {fileID: 706716453459321738}
+  - component: {fileID: 7124025958890296495}
+  - component: {fileID: 7733158684958589704}
   m_Layer: 0
   m_Name: Player_Frog
   m_TagString: Player
@@ -244,7 +245,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0022939593, y: -0.03126052}
+  m_Offset: {x: -0.00006830692, y: -0.03186758}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -254,7 +255,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.19424507, y: 0.22548383}
+  m_Size: {x: 0.13825011, y: 0.22669795}
   m_EdgeRadius: 0
 --- !u!50 &6324891557348267882
 Rigidbody2D:
@@ -283,25 +284,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &7124025958890296495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7955094639064241213}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d54bcdaecfa4a9447904d62dca834121, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ControllerPlayer
-  moveSpeed: 2
-  jumpForce: 3.5
-  enhancedJump: 1
-  fallGravityMultiplier: 0.5
-  jumpCutMultiplier: 1
-  spriteRenderer: {fileID: 1337075344054466720}
-  animator: {fileID: 6960591132351920463}
 --- !u!114 &706716453459321738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,3 +314,36 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &7124025958890296495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7955094639064241213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54bcdaecfa4a9447904d62dca834121, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControllerPlayer
+  moveSpeed: 2
+  jumpForce: 3.5
+  enhancedJump: 1
+  fallGravityMultiplier: 0.5
+  jumpCutMultiplier: 1
+  spriteRenderer: {fileID: 1337075344054466720}
+  animator: {fileID: 6960591132351920463}
+  isInmortal: 0
+--- !u!114 &7733158684958589704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7955094639064241213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00d697f8e2ae64e419a9f41b3418e95e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSceneSpawner
+  spriteRenderer: {fileID: 1337075344054466720}

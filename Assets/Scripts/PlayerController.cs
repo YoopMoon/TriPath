@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [Header("Jump Feel")]
     public bool enhancedJump = true;
     public float fallGravityMultiplier = 0.5f; // cuánto más rápido cae al bajar
-    public float jumpCutMultiplier = 1f;        // cuánto se corta el salto al soltar el botón
+    public float jumpCutMultiplier = 2f;        // cuánto se corta el salto al soltar el botón
     private bool jumpPressed;
 
     private Rigidbody2D rb;
@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
 
     public SpriteRenderer spriteRenderer;
     public Animator animator;
+
+    public bool isInmortal = false;
 
     void Start()
     {

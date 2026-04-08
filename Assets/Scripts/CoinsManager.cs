@@ -14,7 +14,7 @@ public class CoinsManager : MonoBehaviour
     public void CoinCollected()
     {
         coinsCollected += 1;
-        Debug.Log("Coins collected " +  coinsCollected + " of total coins " + totalCoins);
+        //Debug.Log("Coins collected " +  coinsCollected + " of total coins " + totalCoins);
     }
 
 }
