@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4727776762341163720}
   m_Layer: 0
   m_Name: Falling_Platform_Normal
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbe156dce3e9db842906ca75552cdb65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BouncePlatform
+  isEnabled: 1
 --- !u!50 &4727776762341163720
 Rigidbody2D:
   serializedVersion: 5

@@ -9,7 +9,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private int currentHealth;
 
     [Header("Invulnerability")]
-    [SerializeField] private float invulnerabilityTime = 2f;
+    [SerializeField] private float invulnerabilityTime = 1.5f;
     [SerializeField] private float blinkInterval = 0.1f;
     private bool isInvulnerable;
 
@@ -38,7 +38,7 @@ public class PlayerHealth : MonoBehaviour
     {
         // Si existe un valor de vida guardado en el manager persistente,
         // lo restauramos al entrar en una nueva escena.
-        // Si no existe todavía, inicializamos la vida al máximo y la guardamos.
+        // Si no existe todavía, inicializamos la vida al máximo y la guardamos
         if (SceneTransitionManager.instance != null && SceneTransitionManager.instance.HasSavedHealth())
         {
             currentHealth = SceneTransitionManager.instance.GetSavedHealth();

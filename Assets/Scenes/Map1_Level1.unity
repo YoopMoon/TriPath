@@ -447,6 +447,10 @@ PrefabInstance:
       propertyPath: targetSpawnId
       value: SpawnFromRight
       objectReference: {fileID: 0}
+    - target: {fileID: 3372771785754942455, guid: 5380840c3ad0ae2479ebd635e366e1cd, type: 3}
+      propertyPath: transitionPanel
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3401300393724839748, guid: 5380840c3ad0ae2479ebd635e366e1cd, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -666,8 +670,8 @@ GameObject:
   - component: {fileID: 389268061}
   - component: {fileID: 389268060}
   m_Layer: 0
-  m_Name: Grid_Ground
-  m_TagString: Untagged
+  m_Name: Grid_Floor
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1081,8 +1085,8 @@ GameObject:
   - component: {fileID: 860389154}
   - component: {fileID: 860389153}
   m_Layer: 0
-  m_Name: Tilemap_Ground
-  m_TagString: Untagged
+  m_Name: Tilemap_Floor
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7327,6 +7331,10 @@ PrefabInstance:
       propertyPath: targetSpawnId
       value: SpawnFromLeft
       objectReference: {fileID: 0}
+    - target: {fileID: 1051962245776371155, guid: 6e28ebbe10909374f93b461e2d1514a3, type: 3}
+      propertyPath: transitionPanel
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8104172227025964045, guid: 6e28ebbe10909374f93b461e2d1514a3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.648037
@@ -7510,6 +7518,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf2131ca68dba04698b72e494c3f780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+--- !u!50 &2131087707 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 6324891557348267882, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+  m_PrefabInstance: {fileID: 6587370704963527806}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &2131087710 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1337075344054466720, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+  m_PrefabInstance: {fileID: 6587370704963527806}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &88977317636908770
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7672,9 +7690,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7119377418927810174, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 2131087707}
+    - target: {fileID: 7119377418927810174, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 2131087710}
     - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
       propertyPath: jumpForce
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: playerHealth
+      value: 
+      objectReference: {fileID: 2084891128}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: jumpCutMultiplier
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7955094639064241213, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
       propertyPath: m_Name

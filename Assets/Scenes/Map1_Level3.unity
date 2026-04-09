@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 25710701}
   m_Layer: 0
   m_Name: Falling_Platforms_1
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -760,8 +760,8 @@ GameObject:
   - component: {fileID: 357188467}
   - component: {fileID: 357188466}
   m_Layer: 0
-  m_Name: Tilemap_Ground
-  m_TagString: Untagged
+  m_Name: Tilemap_Floor
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5749,7 +5749,7 @@ GameObject:
   - component: {fileID: 484115440}
   m_Layer: 0
   m_Name: Falling_Platform_2
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7080,7 +7080,7 @@ GameObject:
   - component: {fileID: 1613049336}
   - component: {fileID: 1613049335}
   m_Layer: 0
-  m_Name: Grid_Ground
+  m_Name: Grid_Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5193348486035515988}
   - component: {fileID: 608327977085107610}
   m_Layer: 0
-  m_Name: GroundChecker
+  m_Name: FloorChecker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67,7 +67,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0029999614, y: -0.15559965}
+  m_Offset: {x: 0.00027954578, y: -0.16192636}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -77,7 +77,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.034001946, y: 0.0039998293}
+  m_Size: {x: 0.11460376, y: 0.0027344823}
   m_EdgeRadius: 0
 --- !u!114 &608327977085107610
 MonoBehaviour:
@@ -330,12 +330,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ControllerPlayer
   moveSpeed: 2
   jumpForce: 3.5
+  doubleJumpForce: 3.5
   enhancedJump: 1
   fallGravityMultiplier: 0.5
   jumpCutMultiplier: 1
+  hitAnimationDuration: 0.1
   spriteRenderer: {fileID: 1337075344054466720}
   animator: {fileID: 6960591132351920463}
   isInmortal: 0
+  playerHealth: {fileID: 7119377418927810174}
 --- !u!114 &7733158684958589704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,5 +378,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHearts: 3
   currentHealth: 0
-  invulnerabilityTime: 1
-  rb: {fileID: 0}
+  invulnerabilityTime: 1.5
+  blinkInterval: 0.1
+  rb: {fileID: 6324891557348267882}
+  spriteRenderer: {fileID: 1337075344054466720}
+  hitReceived: 0
