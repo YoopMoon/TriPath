@@ -10,7 +10,7 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Invulnerability")]
     [SerializeField] private float invulnerabilityTime = 2f;
-    [SerializeField] private float blinkInterval = 0.2f;
+    [SerializeField] private float blinkInterval = 0.1f;
     private bool isInvulnerable;
 
     [Header("References")]
@@ -36,7 +36,22 @@ public class PlayerHealth : MonoBehaviour
 
     private void Start()
     {
-        currentHealth = MaxHealth;
+        // Si existe un valor de vida guardado en el manager persistente,
+        // lo restauramos al entrar en una nueva escena.
+        // Si no existe todavía, inicializamos la vida al máximo y la guardamos.
+        if (SceneTransitionManager.instance != null && SceneTransitionManager.instance.HasSavedHealth())
+        {
+            currentHealth = SceneTransitionManager.instance.GetSavedHealth();
+            currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
+        }
+        else
+        {
+            currentHealth = MaxHealth;
+
+            if (SceneTransitionManager.instance != null)
+                SceneTransitionManager.instance.SetPlayerHealth(currentHealth);
+        }
+
         OnHealthChanged?.Invoke();
     }
 
@@ -55,6 +70,10 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
 
+        // Guardamos la vida actual para que se mantenga al cambiar de escena.
+        if (SceneTransitionManager.instance != null)
+            SceneTransitionManager.instance.SetPlayerHealth(currentHealth);
+
         ApplyKnockback(knockbackForce);
 
         OnHealthChanged?.Invoke();
@@ -72,6 +91,11 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
+
+        // También actualizamos la vida persistente cuando el jugador se cura.
+        if (SceneTransitionManager.instance != null)
+            SceneTransitionManager.instance.SetPlayerHealth(currentHealth);
+
         OnHealthChanged?.Invoke();
     }
 
@@ -108,6 +132,12 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         Debug.Log("El jugador ha muerto");
+
+        // Reiniciamos la vida guardada para que, si reaparece o vuelve a empezar,
+        // no se conserve una vida a 0 entre escenas.
+        if (SceneTransitionManager.instance != null)
+            SceneTransitionManager.instance.ClearPlayerHealth();
+
         Destroy(gameObject);
     }
 }
