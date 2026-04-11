@@ -132,14 +132,20 @@ public class PlayerController : MonoBehaviour
     private void HandleAnimations()
     {
         bool isFloorDetected = FloorChecker.isFloorDetected;
+        bool isRising = rb.linearVelocity.y > 0.05f && !isFloorDetected;
+        bool isFalling = rb.linearVelocity.y < -0.05f && !isFloorDetected;
 
         // Activo la animación de correr solo si hay input horizontal y está en el suelo
         animator.SetBool("Run", moveInput.x != 0 && isFloorDetected);
 
         // Animaciones de salto y caída según velocidad vertical y si está en el suelo
-        bool isFalling = rb.linearVelocity.y < 0f && !isFloorDetected;
-        animator.SetBool("Jump", !isFloorDetected && !isFalling);
+        animator.SetBool("Jump", isRising);
         animator.SetBool("Fall", isFalling);
+
+        // El doble salto solo debe mantenerse durante el impulso del segundo salto.
+        // En cuanto empieza la caída o el personaje toca el suelo, se desactiva.
+        if (isFalling || isFloorDetected)
+            animator.SetBool("DoubleJump", false);
 
         // El doble salto solo debe mantenerse durante el impulso del segundo salto.
         // En cuanto empieza la caída o el personaje toca el suelo, se desactiva.
