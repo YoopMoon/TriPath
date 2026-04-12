@@ -22,7 +22,6 @@ public class PlayerHealth : MonoBehaviour
     public int MaxHealth => maxHearts * 4;
     public int CurrentHealth => currentHealth;
     public bool IsInvulnerable => isInvulnerable;
-
     public event Action OnHealthChanged;
 
     private void Awake()
@@ -139,5 +138,12 @@ public class PlayerHealth : MonoBehaviour
             SceneTransitionManager.instance.ClearPlayerHealth();
 
         Destroy(gameObject);
+    }
+
+    public void SetMaxHearts(int hearts)
+    {
+        maxHearts = hearts;
+        currentHealth = MaxHealth;
+        OnHealthChanged?.Invoke();
     }
 }

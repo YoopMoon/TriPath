@@ -4336,6 +4336,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3070892451537440628, guid: 614fc0d8232411947996b080701d06b0, type: 3}
   m_PrefabInstance: {fileID: 5602195931712918119}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1857050084 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7119377418927810174, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+  m_PrefabInstance: {fileID: 2026233070}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bf2131ca68dba04698b72e494c3f780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+--- !u!95 &1857050091 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6960591132351920463, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+  m_PrefabInstance: {fileID: 2026233070}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &1857050092 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1337075344054466720, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+  m_PrefabInstance: {fileID: 2026233070}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1948792687
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4446,9 +4467,65 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3990337104940614192, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: frogData
+      value: 
+      objectReference: {fileID: 11400000, guid: a4bf099756a5f404684d3b816aa13065, type: 2}
+    - target: {fileID: 3990337104940614192, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: maskDudeData
+      value: 
+      objectReference: {fileID: 11400000, guid: e4eef8b3bacee4c44805e581450f9d59, type: 2}
+    - target: {fileID: 3990337104940614192, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: selectedPlayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3990337104940614192, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: virtualGuyData
+      value: 
+      objectReference: {fileID: 11400000, guid: e05b02296ca6c664195a89d63ee44522, type: 2}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 1857050091}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: jumpForce
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: moveSpeed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: acceleration
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: deceleration
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: playerHealth
+      value: 
+      objectReference: {fileID: 1857050084}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 1857050092}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: doubleJumpForce
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: m_EditorClassIdentifier
+      value: Assembly-CSharp::PlayerController
+      objectReference: {fileID: 0}
     - target: {fileID: 7955094639064241213, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
       propertyPath: m_Name
-      value: Player_Frog
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -109,8 +109,9 @@ GameObject:
   - component: {fileID: 7733158684958589704}
   - component: {fileID: 8693231698524623958}
   - component: {fileID: 7119377418927810174}
+  - component: {fileID: 3990337104940614192}
   m_Layer: 0
-  m_Name: Player_Frog
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,7 +248,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00006830692, y: -0.029327393}
+  m_Offset: {x: -0.00006830692, y: -0.03049779}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -257,7 +258,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.13825011, y: 0.22161758}
+  m_Size: {x: 0.13825011, y: 0.22395837}
   m_EdgeRadius: 0
 --- !u!50 &6324891557348267882
 Rigidbody2D:
@@ -329,11 +330,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControllerPlayer
   moveSpeed: 2
+  floorAcceleration: 16
+  floorDeceleration: 22
+  airAcceleration: 6
+  airDeceleration: 8
+  turnAccelerationMultiplier: 1.3
   jumpForce: 3.5
   doubleJumpForce: 3.5
   enhancedJump: 1
   fallGravityMultiplier: 0.5
   jumpCutMultiplier: 1
+  runAnimationThreshold: 0.05
+  verticalAnimationThreshold: 0.05
   hitAnimationDuration: 0.1
   spriteRenderer: {fileID: 1337075344054466720}
   animator: {fileID: 6960591132351920463}
@@ -383,3 +391,19 @@ MonoBehaviour:
   rb: {fileID: 6324891557348267882}
   spriteRenderer: {fileID: 1337075344054466720}
   hitReceived: 0
+--- !u!114 &3990337104940614192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7955094639064241213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3885c2918f3ee7944b5faffd635708e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSelect
+  selectedPlayer: 0
+  frogData: {fileID: 11400000, guid: a4bf099756a5f404684d3b816aa13065, type: 2}
+  virtualGuyData: {fileID: 11400000, guid: e05b02296ca6c664195a89d63ee44522, type: 2}
+  maskDudeData: {fileID: 11400000, guid: e4eef8b3bacee4c44805e581450f9d59, type: 2}

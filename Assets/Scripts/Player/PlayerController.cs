@@ -5,16 +5,26 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
-    public float moveSpeed = 2f;
-    public float jumpForce = 3f;
+    public float moveSpeed = 1.8f;
+    public float floorAcceleration = 16f;
+    public float floorDeceleration = 22f;
+    public float airAcceleration = 6f;
+    public float airDeceleration = 8f;
+    public float turnAccelerationMultiplier = 1.3f;
+    public float jumpForce = 2.8f;
     public float doubleJumpForce = 2.5f;
     private bool canDoubleJump;
+    private bool doubleJumpEnabled = true;
 
     [Header("Jump Feel")]
     public bool enhancedJump = true;
     public float fallGravityMultiplier = 0.5f; // cuánto más rápido cae al bajar
     public float jumpCutMultiplier = 1f;       // cuánto se corta el salto al soltar el botón
     private bool jumpPressed;
+
+    [Header("Animation Thresholds")]
+    public float runAnimationThreshold = 0.05f;
+    public float verticalAnimationThreshold = 0.05f;
 
     [Header("Hit Animation")]
     public float hitAnimationDuration = 0.1f;
@@ -72,15 +82,17 @@ public class PlayerController : MonoBehaviour
         // Si está en el suelo, permito el salto normal.
         // Si está en el aire pero todavía conserva el segundo salto,
         // también registro el salto para consumirlo después.
-        if (FloorChecker.isFloorDetected || canDoubleJump)
+        if (FloorChecker.isFloorDetected || (doubleJumpEnabled && canDoubleJump))
             jumpPressed = true;
     }
 
     private void HandleMovement()
     {
+        bool isFloorDetected = FloorChecker.isFloorDetected;
+
         // Cada vez que el personaje toca el suelo, recupera la posibilidad
         // de hacer un doble salto en el siguiente salto aéreo.
-        if (FloorChecker.isFloorDetected)
+        if (isFloorDetected)
         {
             canDoubleJump = true;
 
@@ -89,19 +101,48 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("DoubleJump", false);
         }
 
-        // Movimiento horizontal, mantengo la velocidad vertical que ya lleva.
-        rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
+        float targetSpeed = moveInput.x * moveSpeed;
+        float currentSpeed = rb.linearVelocity.x;
+        float speedDifference = targetSpeed - currentSpeed;
 
-        // Actualizo la dirección del sprite solo si hay movimiento,
-        // para mantener la última posición al soltar.
-        if (moveInput.x != 0)
-            spriteRenderer.flipX = moveInput.x < 0;
+        // En suelo el personaje responde más rápido y se frena mejor.
+        // En aire mantengo algo de control, pero más suave para que no se sienta artificial.
+        float accelerationRate = 0f;
+
+        if (Mathf.Abs(targetSpeed) > 0.01f)
+        {
+            accelerationRate = isFloorDetected ? floorAcceleration : airAcceleration;
+
+            // Si está cambiando de dirección, acelero un poco más
+            // para que el giro no se sienta torpe.
+            if (Mathf.Abs(currentSpeed) > 0.01f && Mathf.Sign(targetSpeed) != Mathf.Sign(currentSpeed))
+                accelerationRate *= turnAccelerationMultiplier;
+        }
+        else
+        {
+            accelerationRate = isFloorDetected ? floorDeceleration : airDeceleration;
+        }
+
+        // MoveTowards da una aceleración/desaceleración más controlada y estable
+        // que sumar directamente una fracción del speedDifference.
+        float newXVelocity = Mathf.MoveTowards(
+            currentSpeed,
+            targetSpeed,
+            accelerationRate * Time.fixedDeltaTime
+        );
+
+        rb.linearVelocity = new Vector2(newXVelocity, rb.linearVelocity.y);
+
+        // Actualizo la dirección del sprite solo si realmente hay movimiento horizontal,
+        // para mantener la última orientación al detenerse.
+        if (Mathf.Abs(rb.linearVelocity.x) > 0.01f)
+            spriteRenderer.flipX = rb.linearVelocity.x < 0f;
     }
 
     private void HandleJump()
     {
         // El salto sí se aplica en FixedUpdate porque aquí estamos modificando
-        // directamente la velocidad del Rigidbody2D, es decir, física del personaje
+        // directamente la velocidad del Rigidbody2D, es decir, física del personaje.
         if (!jumpPressed)
             return;
 
@@ -110,42 +151,38 @@ public class PlayerController : MonoBehaviour
             // Salto normal desde el suelo.
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
-            // El primer salto no debe activar la animación de doble salto
+            // El primer salto no debe activar la animación de doble salto.
             animator.SetBool("DoubleJump", false);
         }
-        else if (canDoubleJump)
+        else if (doubleJumpEnabled && canDoubleJump)
         {
-            // Segundo salto en el aire
-            // Se desactiva después de usarlo para que solo pueda hacerse una vez
+            // Segundo salto en el aire.
+            // Se desactiva después de usarlo para que solo pueda hacerse una vez.
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, doubleJumpForce);
             canDoubleJump = false;
 
             // Activo la animación específica del doble salto
-            // solo cuando realmente se consume el segundo salto
+            // solo cuando realmente se consume el segundo salto.
             animator.SetBool("DoubleJump", true);
         }
 
-        // Consumo la pulsación para evitar saltos pendientes
+        // Consumo la pulsación para evitar saltos pendientes.
         jumpPressed = false;
     }
 
     private void HandleAnimations()
     {
         bool isFloorDetected = FloorChecker.isFloorDetected;
-        bool isRising = rb.linearVelocity.y > 0.05f && !isFloorDetected;
-        bool isFalling = rb.linearVelocity.y < -0.05f && !isFloorDetected;
+        bool isRising = rb.linearVelocity.y > verticalAnimationThreshold && !isFloorDetected;
+        bool isFalling = rb.linearVelocity.y < -verticalAnimationThreshold && !isFloorDetected;
 
-        // Activo la animación de correr solo si hay input horizontal y está en el suelo
-        animator.SetBool("Run", moveInput.x != 0 && isFloorDetected);
+        // La animación de correr se basa en la velocidad real y no solo en el input,
+        // para que acompañe mejor la aceleración progresiva del personaje.
+        animator.SetBool("Run", Mathf.Abs(rb.linearVelocity.x) > runAnimationThreshold && isFloorDetected);
 
-        // Animaciones de salto y caída según velocidad vertical y si está en el suelo
+        // Animaciones de salto y caída según velocidad vertical y si está en el suelo.
         animator.SetBool("Jump", isRising);
         animator.SetBool("Fall", isFalling);
-
-        // El doble salto solo debe mantenerse durante el impulso del segundo salto.
-        // En cuanto empieza la caída o el personaje toca el suelo, se desactiva.
-        if (isFalling || isFloorDetected)
-            animator.SetBool("DoubleJump", false);
 
         // El doble salto solo debe mantenerse durante el impulso del segundo salto.
         // En cuanto empieza la caída o el personaje toca el suelo, se desactiva.
@@ -191,5 +228,13 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("Hit", false);
 
         isPlayingHitAnimation = false;
+    }
+
+    public void SetDoubleJumpEnabled(bool enabled)
+    {
+        doubleJumpEnabled = enabled;
+
+        if (!doubleJumpEnabled)
+            canDoubleJump = false;
     }
 }
