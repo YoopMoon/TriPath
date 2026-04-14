@@ -29,6 +29,8 @@ public class PlayerSelect : MonoBehaviour
         playerController = GetComponent<PlayerController>();
         playerHealth = GetComponent<PlayerHealth>();
 
+        selectedPlayer = SelectedPlayerStore.SelectedPlayer;
+
         ApplySelectedPlayer();
     }
 
