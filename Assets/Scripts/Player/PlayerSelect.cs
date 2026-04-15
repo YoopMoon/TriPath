@@ -67,15 +67,12 @@ public class PlayerSelect : MonoBehaviour
         switch (selectedPlayer)
         {
             case Player.Frog:
-                Debug.Log("Frog data");
                 return frogData;
 
             case Player.VirtualGuy:
-                Debug.Log("VirtualGuy Data");
                 return virtualGuyData;
 
             case Player.MaskDude:
-                Debug.Log("MaskDude Data");
                 return maskDudeData;
 
             default:

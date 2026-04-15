@@ -1,7 +1,8 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthUI : MonoBehaviour
+public class HealthSystemUI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerHealth playerHealth;
@@ -14,16 +15,33 @@ public class HealthUI : MonoBehaviour
     [SerializeField] private Sprite threeQuarterHeart;
     [SerializeField] private Sprite fullHeart;
 
+    [Header("Damage Blink")]
+    [SerializeField] private float damageBlinkDuration = 0.35f;
+    [SerializeField] private float damageBlinkInterval = 0.08f;
+
+    [Header("Heal Blink")]
+    [SerializeField] private float healBlinkDuration = 0.5f;
+    [SerializeField] private float healBlinkInterval = 0.14f;
+
+    private Coroutine blinkCoroutine;
+
     private void Start()
     {
         playerHealth.OnHealthChanged += UpdateHearts;
+        playerHealth.OnDamageTaken += BlinkHeartsOnDamage;
+        playerHealth.OnHealed += BlinkHeartsOnHeal;
+
         UpdateHearts();
     }
 
     private void OnDestroy()
     {
         if (playerHealth != null)
+        {
             playerHealth.OnHealthChanged -= UpdateHearts;
+            playerHealth.OnDamageTaken -= BlinkHeartsOnDamage;
+            playerHealth.OnHealed -= BlinkHeartsOnHeal;
+        }
     }
 
     private void UpdateHearts()
@@ -63,6 +81,54 @@ public class HealthUI : MonoBehaviour
                     heartImages[i].sprite = fullHeart;
                     break;
             }
+
+            heartImages[i].enabled = true;
         }
+    }
+
+    private void BlinkHeartsOnDamage()
+    {
+        StartBlink(damageBlinkDuration, damageBlinkInterval);
+    }
+
+    private void BlinkHeartsOnHeal()
+    {
+        StartBlink(healBlinkDuration, healBlinkInterval);
+    }
+
+    private void StartBlink(float duration, float interval)
+    {
+        if (blinkCoroutine != null)
+            StopCoroutine(blinkCoroutine);
+
+        blinkCoroutine = StartCoroutine(BlinkHeartsCoroutine(duration, interval));
+    }
+
+    private IEnumerator BlinkHeartsCoroutine(float duration, float interval)
+    {
+        float elapsedTime = 0f;
+        bool visible = true;
+
+        while (elapsedTime < duration)
+        {
+            visible = !visible;
+
+            for (int i = 0; i < heartImages.Length; i++)
+            {
+                if (heartImages[i].gameObject.activeSelf)
+                    heartImages[i].enabled = visible;
+            }
+
+            yield return new WaitForSeconds(interval);
+            elapsedTime += interval;
+        }
+
+        for (int i = 0; i < heartImages.Length; i++)
+        {
+            if (heartImages[i].gameObject.activeSelf)
+                heartImages[i].enabled = true;
+        }
+
+        blinkCoroutine = null;
     }
 }

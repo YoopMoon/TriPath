@@ -6019,26 +6019,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 952135336}
-  - component: {fileID: 952135335}
   m_Layer: 0
-  m_Name: Coins_Manager
+  m_Name: Coins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &952135335
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 952135334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce27269203253ab459f59f15566a56a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!4 &952135336
 Transform:
   m_ObjectHideFlags: 0
@@ -6321,6 +6308,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cea8bda9fe02b544ba9cdf6d5c09e289, type: 3}
+--- !u!20 &1118845722 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7657693764798400318, guid: cea8bda9fe02b544ba9cdf6d5c09e289, type: 3}
+  m_PrefabInstance: {fileID: 1118845721}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1176795724
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6576,17 +6568,9 @@ PrefabInstance:
       propertyPath: playerHealth
       value: 
       objectReference: {fileID: 2084891128}
-    - target: {fileID: 2517959957639341286, guid: cb2b03ac14d3f6e43adddc029aa8d051, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -478.254
-      objectReference: {fileID: 0}
-    - target: {fileID: 2517959957639341286, guid: cb2b03ac14d3f6e43adddc029aa8d051, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -265.446
-      objectReference: {fileID: 0}
     - target: {fileID: 2859266085580743387, guid: cb2b03ac14d3f6e43adddc029aa8d051, type: 3}
       propertyPath: m_Name
-      value: HealthSystemCanvas
+      value: HealthAndCoinSystemCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 3794155745020975022, guid: cb2b03ac14d3f6e43adddc029aa8d051, type: 3}
       propertyPath: m_Pivot.x
@@ -6668,6 +6652,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7056043253576517259, guid: cb2b03ac14d3f6e43adddc029aa8d051, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 8980438598086963491, guid: 78f0ebc12327a9e44b731b06317fe7db, type: 3}
+    - target: {fileID: 7654425590786938467, guid: cb2b03ac14d3f6e43adddc029aa8d051, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1118845722}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7707,17 +7699,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2131087710}
     - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
-      propertyPath: jumpForce
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
       propertyPath: playerHealth
       value: 
       objectReference: {fileID: 2084891128}
-    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
-      propertyPath: jumpCutMultiplier
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 7955094639064241213, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
       propertyPath: m_Name
       value: Player

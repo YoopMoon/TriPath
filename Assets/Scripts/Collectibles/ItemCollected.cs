@@ -60,15 +60,13 @@ public class ItemCollected : MonoBehaviour
         switch (collectibleType)
         {
             case CollectibleType.Coin:
-                CoinsManager coinsManager = FindAnyObjectByType<CoinsManager>();
-                if (coinsManager != null)
-                {
-                    coinsManager.CoinCollected();
-                }
+                if (SceneTransitionManager.instance != null)
+                    SceneTransitionManager.instance.AddPlayerCoins(1);
                 break;
 
             case CollectibleType.Fruit:
-                playerHealth.Heal(1);
+                if (playerHealth != null)
+                    playerHealth.Heal(1);
                 break;
         }
 

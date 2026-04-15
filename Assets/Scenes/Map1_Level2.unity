@@ -5506,6 +5506,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HealthSystemCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 3248004408189807301, guid: cb2b03ac14d3f6e43adddc029aa8d051, type: 3}
+      propertyPath: m_Text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3794155745020975022, guid: cb2b03ac14d3f6e43adddc029aa8d051, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6590,13 +6594,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7124025958890296495, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
-      propertyPath: jumpForce
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 7955094639064241213, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
       propertyPath: m_Name
-      value: Player_Frog
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

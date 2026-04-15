@@ -17,7 +17,6 @@ public class EnvironmentHazard : MonoBehaviour
 
         Vector2 knockbackForce = new Vector2(0f, knockbackY);
 
-        Debug.Log("Player damaged by hazard");
         playerHealth.TakeDamage(damageAmount, knockbackForce);
     }
 }

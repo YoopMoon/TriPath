@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     public float airAcceleration = 6f;
     public float airDeceleration = 8f;
     public float turnAccelerationMultiplier = 1.3f;
-    public float jumpForce = 2.8f;
+    public float jumpForce = 3f;
     public float doubleJumpForce = 2.5f;
     private bool canDoubleJump;
     private bool doubleJumpEnabled = true;

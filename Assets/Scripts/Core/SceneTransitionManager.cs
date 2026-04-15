@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SceneTransitionManager : MonoBehaviour
@@ -10,6 +11,9 @@ public class SceneTransitionManager : MonoBehaviour
     // Guardamos aquí la vida del jugador entre escenas.
     // Usamos -1 como valor "no inicializado" para saber si ya existe una vida previa guardada.
     private int savedPlayerHealth = -1;
+
+    private int savedCoins = 0;
+    public event Action<int> OnCoinsChanged;
 
     private void Awake()
     {
@@ -58,4 +62,27 @@ public class SceneTransitionManager : MonoBehaviour
     {
         savedPlayerHealth = -1;
     }
+
+    public int GetPlayerCoins()
+    {
+        return savedCoins;
+    }
+
+    public void SetPlayerCoins(int coins)
+    {
+        savedCoins = Mathf.Max(0, coins);
+        OnCoinsChanged?.Invoke(savedCoins);
+    }
+
+    public void AddPlayerCoins(int amount)
+    {
+        SetPlayerCoins(savedCoins + amount);
+    }
+
+    public void ClearPlayerCoins()
+    {
+        savedCoins = 0;
+        OnCoinsChanged?.Invoke(savedCoins);
+    }
+
 }

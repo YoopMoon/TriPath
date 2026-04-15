@@ -19,7 +19,6 @@ public class SpikeHead : MonoBehaviour
         float directionX = collision.transform.position.x > transform.position.x ? 1f : -1f;
         Vector2 knockbackForce = new Vector2(directionX * knockbackX, knockbackY);
 
-        Debug.Log("Player damaged");
         playerHealth.TakeDamage(damageAmount, knockbackForce);
     }
 }
