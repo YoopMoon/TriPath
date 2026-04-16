@@ -301,7 +301,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &6318252622337414416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -651,6 +651,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3794155745020975022}
     m_Modifications:
+    - target: {fileID: 459623444465401951, guid: 614fc0d8232411947996b080701d06b0, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1147176825070718765, guid: 614fc0d8232411947996b080701d06b0, type: 3}
       propertyPath: m_Name
       value: Collectible_Coin
@@ -715,8 +719,11 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 8980438598086963491, guid: 78f0ebc12327a9e44b731b06317fe7db, type: 3}
-    m_RemovedComponents:
-    - {fileID: 459623444465401951, guid: 614fc0d8232411947996b080701d06b0, type: 3}
+    - target: {fileID: 5066682105806391431, guid: 614fc0d8232411947996b080701d06b0, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5619318294832295380, guid: 614fc0d8232411947996b080701d06b0, type: 3}
     m_AddedGameObjects: []
