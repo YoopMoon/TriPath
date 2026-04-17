@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CoinsCounterUI : MonoBehaviour
+public class CoinCounterUI : MonoBehaviour
 {
     [SerializeField] private Text coinText;
 

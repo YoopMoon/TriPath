@@ -45,6 +45,10 @@ public class PauseMenuUI : MonoBehaviour
     {
         Debug.Log("Ir a Main Menu");
         Time.timeScale = 1f;
+
+        SceneTransitionManager.instance.ClearPlayerCoins();
+        SceneTransitionManager.instance.ClearPlayerHealth();
+
         SceneManager.LoadScene("CharacterSelectScene");
     }
 }

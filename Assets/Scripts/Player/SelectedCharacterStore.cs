@@ -1,4 +1,4 @@
 public static class SelectedPlayerStore
 {
-    public static PlayerSelect.Player SelectedPlayer = PlayerSelect.Player.VirtualGuy;
+    public static PlayerSelect.Player SelectedPlayer = PlayerSelect.Player.Frog;
 }

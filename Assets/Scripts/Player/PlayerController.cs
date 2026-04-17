@@ -30,10 +30,15 @@ public class PlayerController : MonoBehaviour
     public float hitAnimationDuration = 0.1f;
     private bool isPlayingHitAnimation = false;
 
+    [Header("Jump Grace Time")]
+    public float coyoteTime = 0.1f;
+    private float coyoteTimeCounter;
+
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private InputAction jumpAction;
 
+    [Header("Player SpriteRender and Animator")]
     public SpriteRenderer spriteRenderer;
     public Animator animator;
 
@@ -58,6 +63,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        UpdateCoyoteTime();
         HandleJumpInput();
         HandleAnimations();
         HandleHitAnimation();
@@ -70,6 +76,14 @@ public class PlayerController : MonoBehaviour
         HandleEnhancedJumpPhysics();
     }
 
+    private void UpdateCoyoteTime()
+    {
+        if (FloorChecker.isFloorDetected)
+            coyoteTimeCounter = coyoteTime;
+        else
+            coyoteTimeCounter -= Time.deltaTime;
+    }
+
     private void HandleJumpInput()
     {
         // El salto se detecta en Update y no en FixedUpdate porque Update se ejecuta
@@ -79,10 +93,12 @@ public class PlayerController : MonoBehaviour
         if (!jumpAction.WasPressedThisFrame())
             return;
 
-        // Si está en el suelo, permito el salto normal.
-        // Si está en el aire pero todavía conserva el segundo salto,
-        // también registro el salto para consumirlo después.
-        if (FloorChecker.isFloorDetected || (doubleJumpEnabled && canDoubleJump))
+        // Permitimos registrar el salto si todavía estamos dentro del margen del
+        // coyote time o si el personaje conserva el doble salto.
+        bool canUseNormalJump = coyoteTimeCounter > 0f;
+        bool canUseDoubleJump = doubleJumpEnabled && canDoubleJump;
+
+        if (canUseNormalJump || canUseDoubleJump)
             jumpPressed = true;
     }
 
@@ -94,7 +110,8 @@ public class PlayerController : MonoBehaviour
         // de hacer un doble salto en el siguiente salto aéreo.
         if (isFloorDetected)
         {
-            canDoubleJump = true;
+            if (doubleJumpEnabled)
+                canDoubleJump = true;
 
             // Al volver al suelo se desactiva la animación de doble salto,
             // ya que el siguiente salto volverá a ser el primero.
@@ -141,23 +158,35 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJump()
     {
-        // El salto sí se aplica en FixedUpdate porque aquí estamos modificando
-        // directamente la velocidad del Rigidbody2D, es decir, física del personaje.
+        // El salto se aplica en FixedUpdate porque aquí modificamos directamente
+        // la velocidad del Rigidbody2D, es decir, la física del personaje.
         if (!jumpPressed)
             return;
 
-        if (FloorChecker.isFloorDetected)
+        // El salto normal no depende solo de que el suelo se detecte justo en este frame.
+        // Gracias al coyote time, permitimos saltar durante un pequeño margen de tiempo
+        // después de haber dejado de tocar el suelo. Esto evita fallos de salto cuando
+        // la detección del suelo parpadea brevemente o cuando el personaje cambia muy rápido
+        // de dirección sobre una plataforma.
+        bool canUseNormalJump = coyoteTimeCounter > 0f;
+
+        if (canUseNormalJump)
         {
-            // Salto normal desde el suelo.
+            // Salto normal desde el suelo o dentro del margen del coyote time.
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
-            // El primer salto no debe activar la animación de doble salto.
+            // Consumimos el coyote time para que no pueda reutilizarse varias veces
+            // con una sola detección de suelo.
+            coyoteTimeCounter = 0f;
+
+            // El salto normal no debe activar la animación de doble salto.
             animator.SetBool("DoubleJump", false);
         }
         else if (doubleJumpEnabled && canDoubleJump)
         {
             // Segundo salto en el aire.
-            // Se desactiva después de usarlo para que solo pueda hacerse una vez.
+            // Solo puede ejecutarse si este personaje tiene doble salto habilitado
+            // y todavía no lo ha consumido durante este salto.
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, doubleJumpForce);
             canDoubleJump = false;
 
@@ -166,7 +195,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("DoubleJump", true);
         }
 
-        // Consumo la pulsación para evitar saltos pendientes.
+        // Consumimos la pulsación para evitar saltos pendientes.
         jumpPressed = false;
     }
 
@@ -233,8 +262,6 @@ public class PlayerController : MonoBehaviour
     public void SetDoubleJumpEnabled(bool enabled)
     {
         doubleJumpEnabled = enabled;
-
-        if (!doubleJumpEnabled)
-            canDoubleJump = false;
+        canDoubleJump = enabled && FloorChecker.isFloorDetected;
     }
 }

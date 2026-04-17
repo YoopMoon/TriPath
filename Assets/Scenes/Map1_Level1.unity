@@ -5956,6 +5956,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 175564519}
     m_Modifications:
+    - target: {fileID: 2456095056336594847, guid: b30be4adca5972c498cbceed746328a5, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 4adfb91df4fa1744a9639d7b8d626dbe, type: 2}
     - target: {fileID: 3330219743930842519, guid: b30be4adca5972c498cbceed746328a5, type: 3}
       propertyPath: m_Name
       value: Box
@@ -7788,9 +7792,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3990337104940614192, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
-      propertyPath: selectedPlayer
-      value: 2
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3990337104940614192, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: maskDudeData
+      value: 
+      objectReference: {fileID: 11400000, guid: e4eef8b3bacee4c44805e581450f9d59, type: 2}
+    - target: {fileID: 3990337104940614192, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: selectedPlayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3990337104940614192, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
+      propertyPath: virtualGuyData
+      value: 
+      objectReference: {fileID: 11400000, guid: e05b02296ca6c664195a89d63ee44522, type: 2}
     - target: {fileID: 7119377418927810174, guid: 74044bc8a8f78ee4384cd4fb144a6e2f, type: 3}
       propertyPath: rb
       value: 
