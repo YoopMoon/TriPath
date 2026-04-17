@@ -103,6 +103,10 @@ public class CharacterSelectionMenu : MonoBehaviour
             return;
 
         SelectedPlayerStore.SelectedPlayer = characterSlots[selectedIndex].playerType;
+
+        SceneTransitionManager.instance.ClearPlayerCoins();
+        SceneTransitionManager.instance.ClearPlayerHealth();
+
         SceneManager.LoadScene(firstLevelSceneName);
     }
 }
