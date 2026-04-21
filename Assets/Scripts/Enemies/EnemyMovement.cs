@@ -12,6 +12,7 @@ public class EnemyMovement : MonoBehaviour
     [Header("References")]
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Collider2D topDamageCollider;
 
     [Header("Enemy Stats")]
     [SerializeField] private int maxHealth = 1;
@@ -23,9 +24,17 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private MovementMode movementMode = MovementMode.Horizontal;
     [SerializeField] private Transform[] patrolPoints;
 
+    private BoxCollider2D topBoxCollider;
+    private CapsuleCollider2D topCapsuleCollider;
+    private CircleCollider2D topCircleCollider;
+
     private int currentPointIndex;
-    private float waitTimer;
     private int currentHealth;
+    private float waitTimer;
+    private float initialColliderOffsetX;
+
+    private bool hasIdleParameter;
+    private bool isDead;
 
     public int MaxHealth => maxHealth;
     public int CurrentHealth => currentHealth;
@@ -33,6 +42,23 @@ public class EnemyMovement : MonoBehaviour
     private void Awake()
     {
         currentHealth = maxHealth;
+
+        if (animator != null)
+            hasIdleParameter = HasBoolParameter("Idle");
+
+        if (topDamageCollider != null)
+        {
+            topBoxCollider = topDamageCollider as BoxCollider2D;
+            topCapsuleCollider = topDamageCollider as CapsuleCollider2D;
+            topCircleCollider = topDamageCollider as CircleCollider2D;
+
+            if (topBoxCollider != null)
+                initialColliderOffsetX = Mathf.Abs(topBoxCollider.offset.x);
+            else if (topCapsuleCollider != null)
+                initialColliderOffsetX = Mathf.Abs(topCapsuleCollider.offset.x);
+            else if (topCircleCollider != null)
+                initialColliderOffsetX = Mathf.Abs(topCircleCollider.offset.x);
+        }
     }
 
     private void Start()
@@ -42,7 +68,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
-        if (patrolPoints == null || patrolPoints.Length == 0)
+        if (isDead || patrolPoints == null || patrolPoints.Length == 0)
             return;
 
         MoveTowardsCurrentPoint();
@@ -90,48 +116,67 @@ public class EnemyMovement : MonoBehaviour
         switch (movementMode)
         {
             case MovementMode.Horizontal:
-                // Solo cambia la X. La Y se mantiene fija.
                 return new Vector2(originalTarget.x, currentPosition.y);
 
             case MovementMode.Vertical:
-                // Solo cambia la Y. La X se mantiene fija.
                 return new Vector2(currentPosition.x, originalTarget.y);
 
             case MovementMode.Free:
             default:
-                // Permite movimiento completo entre puntos.
                 return originalTarget;
         }
     }
 
     private void UpdateSpriteDirection(Vector2 targetPosition)
     {
-        // El flip solo tiene sentido real cuando hay desplazamiento horizontal.
-        // En enemigos que patrullan en vertical, esta parte no altera la orientación.
         float horizontalDirection = targetPosition.x - (float)transform.position.x;
 
         if (horizontalDirection > 0.01f)
+        {
             spriteRenderer.flipX = true;
+            UpdateTopColliderSide(true);
+        }
         else if (horizontalDirection < -0.01f)
+        {
             spriteRenderer.flipX = false;
+            UpdateTopColliderSide(false);
+        }
+    }
+
+    private void UpdateTopColliderSide(bool facingRight)
+    {
+        float targetOffsetX = facingRight ? initialColliderOffsetX : -initialColliderOffsetX;
+
+        if (topBoxCollider != null)
+        {
+            Vector2 offset = topBoxCollider.offset;
+            offset.x = targetOffsetX;
+            topBoxCollider.offset = offset;
+        }
+        else if (topCapsuleCollider != null)
+        {
+            Vector2 offset = topCapsuleCollider.offset;
+            offset.x = targetOffsetX;
+            topCapsuleCollider.offset = offset;
+        }
+        else if (topCircleCollider != null)
+        {
+            Vector2 offset = topCircleCollider.offset;
+            offset.x = targetOffsetX;
+            topCircleCollider.offset = offset;
+        }
     }
 
     private void UpdateAnimationState()
     {
-        if (animator == null || patrolPoints == null || patrolPoints.Length == 0)
+        if (animator == null || !hasIdleParameter)
             return;
 
         Vector2 targetPosition = GetFilteredTargetPosition(patrolPoints[currentPointIndex].position);
         float distanceToTarget = Vector2.Distance(transform.position, targetPosition);
 
-        // Si ya ha alcanzado el punto actual y sigue esperando antes de pasar al siguiente,
-        // el enemigo se considera en reposo.
         bool isIdle = distanceToTarget <= arrivalThreshold && waitTimer > 0f;
-
-        // No todos los enemigos usan una animación Idle. Antes de intentar actualizar
-        // el parámetro, comprobamos que exista para evitar warnings en consola.
-        if (HasBoolParameter("Idle"))
-            animator.SetBool("Idle", isIdle);
+        animator.SetBool("Idle", isIdle);
     }
 
     private bool HasBoolParameter(string parameterName)
@@ -165,6 +210,9 @@ public class EnemyMovement : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
+        if (isDead)
+            return;
+
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
@@ -174,6 +222,10 @@ public class EnemyMovement : MonoBehaviour
 
     private void Die()
     {
+        if (isDead)
+            return;
+
+        isDead = true;
         Destroy(gameObject);
     }
 
@@ -190,7 +242,7 @@ public class EnemyMovement : MonoBehaviour
                 continue;
 
             Vector2 pointPosition = patrolPoints[i].position;
-            Gizmos.DrawSphere(pointPosition, 0.08f);
+            Gizmos.DrawSphere(pointPosition, 0.06f);
 
             Transform nextPoint = patrolPoints[(i + 1) % patrolPoints.Length];
 
