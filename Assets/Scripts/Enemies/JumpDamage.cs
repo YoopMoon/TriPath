@@ -22,7 +22,17 @@ public class JumpDamage : MonoBehaviour
 
     private void Awake()
     {
+        ApplyDifficultySettings();
         currentHealth = maxHealth;
+    }
+
+    private void ApplyDifficultySettings()
+    {
+        if (AdaptiveDifficultyManager.Instance == null)
+            return;
+
+        DifficultySettings settings = AdaptiveDifficultyManager.Instance.GetCurrentSettings();
+        maxHealth = Mathf.Max(1, Mathf.RoundToInt(maxHealth * settings.enemyHealthMultiplier));
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -36,7 +46,6 @@ public class JumpDamage : MonoBehaviour
         if (!collision.gameObject.TryGetComponent(out Rigidbody2D playerRb))
             return;
 
-        // Rebote del jugador al golpear al enemigo.
         playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 0f);
         playerRb.linearVelocity += Vector2.up * bounceForce;
 
@@ -77,9 +86,6 @@ public class JumpDamage : MonoBehaviour
 
         AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
 
-        // Si la animación de golpe ya se está reproduciendo, no la reiniciamos.
-        // Así evitamos que se encadene o parezca que entra varias veces seguidas
-        // por un mismo contacto.
         if (currentState.IsName(hitAnimationName) && currentState.normalizedTime < 1f)
             return;
 

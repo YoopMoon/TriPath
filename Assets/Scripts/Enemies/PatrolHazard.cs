@@ -46,12 +46,26 @@ public class PatrolHazard : MonoBehaviour
         if (rb == null)
             rb = GetComponent<Rigidbody2D>();
 
+        ApplyDifficultySettings();
         ApplyMovementConstraints();
     }
 
     private void Start()
     {
         waitTimer = waitDuration;
+    }
+
+    private void ApplyDifficultySettings()
+    {
+        if (AdaptiveDifficultyManager.Instance == null)
+            return;
+
+        DifficultySettings settings = AdaptiveDifficultyManager.Instance.GetCurrentSettings();
+
+        moveSpeed = Mathf.Max(0f, moveSpeed * settings.enemySpeedMultiplier);
+        upwardSpeed = Mathf.Max(0f, upwardSpeed * settings.enemySpeedMultiplier);
+        waitDuration = Mathf.Max(0f, waitDuration * settings.enemyWaitDurationMultiplier);
+        impactPauseDuration = Mathf.Max(0f, impactPauseDuration * settings.enemyWaitDurationMultiplier);
     }
 
     private void FixedUpdate()
@@ -76,18 +90,15 @@ public class PatrolHazard : MonoBehaviour
         switch (movementMode)
         {
             case MovementMode.Vertical:
-                // En vertical solo debe moverse en Y.
                 rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
                 break;
 
             case MovementMode.Horizontal:
-                // En horizontal solo debe moverse en X.
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 break;
 
             case MovementMode.Free:
             default:
-                // En movimiento libre permitimos X e Y, pero bloqueamos la rotación.
                 rb.constraints = RigidbodyConstraints2D.FreezeRotation;
                 break;
         }
@@ -165,7 +176,6 @@ public class PatrolHazard : MonoBehaviour
 
         if (targetPosition.y > currentPosition.y)
         {
-            // Subida controlada con velocidad constante.
             currentFallSpeed = 0f;
 
             newY = Mathf.MoveTowards(
@@ -176,8 +186,6 @@ public class PatrolHazard : MonoBehaviour
         }
         else if (targetPosition.y < currentPosition.y)
         {
-            // Caída con aceleración progresiva para que no parezca una simple
-            // bajada a velocidad fija.
             currentFallSpeed += fallAcceleration * Time.fixedDeltaTime;
             currentFallSpeed = Mathf.Min(currentFallSpeed, maxFallSpeed);
 
@@ -238,8 +246,6 @@ public class PatrolHazard : MonoBehaviour
         lastImpactAnimationTime = Time.time;
         currentFallSpeed = 0f;
 
-        // Tras impactar, el hazard se detiene un instante antes de continuar
-        // hacia el siguiente punto de patrulla.
         isPausedByImpact = true;
         impactPauseTimer = impactPauseDuration;
     }
@@ -272,7 +278,6 @@ public class PatrolHazard : MonoBehaviour
 
         AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
 
-        // Evitamos reiniciar una animación de impacto si ya se está reproduciendo.
         if (currentState.IsName(animationName) && currentState.normalizedTime < 1f)
             return;
 

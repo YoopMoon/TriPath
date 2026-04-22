@@ -41,11 +41,36 @@ public class PauseMenuUI : MonoBehaviour
         Debug.Log("Abrir ajustes");
     }
 
-    public void ExitGame()
+    public void ExitGame() // Irá al menú principal
     {
-        Debug.Log("Ir a Main Menu");
-        Time.timeScale = 1f;
+        ResetRunProgress();
 
+        Time.timeScale = 1f;
         SceneManager.LoadScene("CharacterSelectScene");
+    }
+
+    public void ChangeCharacter()
+    {
+        ResetRunProgress();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("CharacterSelectScene");
+    }
+
+    private void ResetRunProgress()
+    {
+        if (AdaptiveDifficultyManager.Instance != null)
+            AdaptiveDifficultyManager.Instance.ResetProgress();
+
+        if (LevelProgressManager.Instance != null)
+            LevelProgressManager.Instance.ResetProgress();
+
+        if (CollectibleStateManager.Instance != null)
+            CollectibleStateManager.Instance.ResetProgress();
+
+        if (SceneTransitionManager.instance != null)
+            SceneTransitionManager.instance.ResetProgress();
+
+        if (LevelMetrics.Instance != null)
+            LevelMetrics.Instance.ResetMetrics();
     }
 }

@@ -28,4 +28,9 @@ public class CollectibleStateManager : MonoBehaviour
     {
         return collectedItems.Contains(itemId);
     }
+
+    public void ResetProgress()
+    {
+        collectedItems.Clear();
+    }
 }

@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7550046271439610597
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3002879746838364189}
+  - component: {fileID: 1489126039328462020}
+  - component: {fileID: 8965497654608571365}
+  - component: {fileID: 6802145636426350422}
+  - component: {fileID: 929659317632101561}
+  m_Layer: 0
+  m_Name: GameManagers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3002879746838364189
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7550046271439610597}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.71366, y: 0.59118, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1489126039328462020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7550046271439610597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4325fac81b1672349bc4b6d8db3ae994, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AdaptiveDifficultyManager
+  currentDifficulty: 1
+  defaultDifficulty: 1
+  easySettings:
+    difficulty: 0
+    enemyDamageMultiplier: 1
+    environmentDamageMultiplier: 1
+    fruitHealAmount: 3
+    enemySpeedMultiplier: 0.65
+    enemyWaitDurationMultiplier: 1.5
+    enemyHealthMultiplier: 0.75
+  normalSettings:
+    difficulty: 1
+    enemyDamageMultiplier: 1
+    environmentDamageMultiplier: 1
+    fruitHealAmount: 1
+    enemySpeedMultiplier: 1
+    enemyWaitDurationMultiplier: 1
+    enemyHealthMultiplier: 1
+  hardSettings:
+    difficulty: 2
+    enemyDamageMultiplier: 2
+    environmentDamageMultiplier: 1
+    fruitHealAmount: 1
+    enemySpeedMultiplier: 1.75
+    enemyWaitDurationMultiplier: 0.5
+    enemyHealthMultiplier: 2
+  lastScore: 0
+  lastTime: 0
+  lastDamage: 0
+  lastDeaths: 0
+  lastCoinPercentage: 0
+--- !u!114 &8965497654608571365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7550046271439610597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 976f7125f039902429cf8aceff4b7a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelProgressManager
+--- !u!114 &6802145636426350422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7550046271439610597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f602d87dbdcf2054d852c83085719be7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneTransitionManager
+--- !u!114 &929659317632101561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7550046271439610597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff8c2737386ecf7409a6e66e915b54eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CollectibleStateManager

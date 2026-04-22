@@ -20,7 +20,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     [SerializeField] private Button continueButton;
 
     [Header("Next Scene")]
-    [SerializeField] private string firstLevelSceneName = "PrototypeScene";
+    [SerializeField] private string nextLevelSceneName = "HowToPlay";
 
     [Header("Initial Selection")]
     [SerializeField] private int selectedIndex = 1;
@@ -42,6 +42,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     private void Update()
     {
         HandleKeyboardSelection();
+        HandleContinueInput();
     }
 
     private void HandleKeyboardSelection()
@@ -56,6 +57,17 @@ public class CharacterSelectionMenu : MonoBehaviour
         else if (Keyboard.current.dKey.wasPressedThisFrame || Keyboard.current.rightArrowKey.wasPressedThisFrame)
         {
             ChangeSelection(1);
+        }
+    }
+
+    private void HandleContinueInput()
+    {
+        if (Keyboard.current == null)
+            return;
+
+        if (Keyboard.current.spaceKey.wasReleasedThisFrame)
+        {
+            ContinueToGame();
         }
     }
 
@@ -97,16 +109,28 @@ public class CharacterSelectionMenu : MonoBehaviour
         UpdateVisualSelection();
     }
 
+    private bool isLoadingScene;
+
     public void ContinueToGame()
     {
+        if (isLoadingScene)
+            return;
+
         if (characterSlots == null || characterSlots.Length == 0)
             return;
 
+        isLoadingScene = true;
+
         SelectedPlayerStore.SelectedPlayer = characterSlots[selectedIndex].playerType;
 
-        SceneTransitionManager.instance.ClearPlayerCoins();
-        SceneTransitionManager.instance.ClearPlayerHealth();
+        if (SceneTransitionManager.instance != null)
+        {
+            SceneTransitionManager.instance.ClearPlayerCoins();
+            SceneTransitionManager.instance.ClearPlayerHealth();
+            SceneTransitionManager.instance.ClearTransitionData();
+        }
 
-        SceneManager.LoadScene(firstLevelSceneName);
+        SceneManager.LoadScene(nextLevelSceneName);
     }
+
 }

@@ -85,4 +85,10 @@ public class SceneTransitionManager : MonoBehaviour
         OnCoinsChanged?.Invoke(savedCoins);
     }
 
+    public void ResetProgress()
+    {
+        ClearTransitionData();
+        ClearPlayerHealth();
+        ClearPlayerCoins();
+    }
 }

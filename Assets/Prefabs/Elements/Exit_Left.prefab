@@ -93,3 +93,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneTransition
   nextSceneName: 
   targetSpawnId: 
+  exitType: 0
+  transitionPanel: {fileID: 0}

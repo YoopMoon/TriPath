@@ -16,7 +16,22 @@ public class EnvironmentHazard : MonoBehaviour
             return;
 
         Vector2 knockbackForce = new Vector2(0f, knockbackY);
+        int finalDamage = GetAdaptedDamage();
 
-        playerHealth.TakeDamage(damageAmount, knockbackForce);
+        playerHealth.TakeDamage(finalDamage, knockbackForce);
+    }
+
+    private int GetAdaptedDamage()
+    {
+        float damageMultiplier = 1f;
+
+        if (AdaptiveDifficultyManager.Instance != null)
+        {
+            DifficultySettings settings = AdaptiveDifficultyManager.Instance.GetCurrentSettings();
+            damageMultiplier = settings.environmentDamageMultiplier;
+        }
+
+        int adaptedDamage = Mathf.RoundToInt(damageAmount * damageMultiplier);
+        return Mathf.Max(1, adaptedDamage);
     }
 }

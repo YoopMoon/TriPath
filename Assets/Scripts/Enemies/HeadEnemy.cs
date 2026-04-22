@@ -19,6 +19,21 @@ public class HeadEnemy : MonoBehaviour
         float directionX = collision.transform.position.x > transform.position.x ? 1f : -1f;
         Vector2 knockbackForce = new Vector2(directionX * knockbackX, knockbackY);
 
-        playerHealth.TakeDamage(damageAmount, knockbackForce);
+        int finalDamage = GetAdaptedDamage();
+        playerHealth.TakeDamage(finalDamage, knockbackForce);
+    }
+
+    private int GetAdaptedDamage()
+    {
+        float damageMultiplier = 1f;
+
+        if (AdaptiveDifficultyManager.Instance != null)
+        {
+            DifficultySettings settings = AdaptiveDifficultyManager.Instance.GetCurrentSettings();
+            damageMultiplier = settings.enemyDamageMultiplier;
+        }
+
+        int adaptedDamage = Mathf.RoundToInt(damageAmount * damageMultiplier);
+        return Mathf.Max(1, adaptedDamage);
     }
 }

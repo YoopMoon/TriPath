@@ -41,8 +41,6 @@ public class EnemyMovement : MonoBehaviour
 
     private void Awake()
     {
-        currentHealth = maxHealth;
-
         if (animator != null)
             hasIdleParameter = HasBoolParameter("Idle");
 
@@ -59,6 +57,9 @@ public class EnemyMovement : MonoBehaviour
             else if (topCircleCollider != null)
                 initialColliderOffsetX = Mathf.Abs(topCircleCollider.offset.x);
         }
+
+        ApplyDifficultySettings();
+        currentHealth = maxHealth;
     }
 
     private void Start()
@@ -73,6 +74,18 @@ public class EnemyMovement : MonoBehaviour
 
         MoveTowardsCurrentPoint();
         UpdateAnimationState();
+    }
+
+    private void ApplyDifficultySettings()
+    {
+        if (AdaptiveDifficultyManager.Instance == null)
+            return;
+
+        DifficultySettings settings = AdaptiveDifficultyManager.Instance.GetCurrentSettings();
+
+        maxHealth = Mathf.Max(1, Mathf.RoundToInt(maxHealth * settings.enemyHealthMultiplier));
+        moveSpeed = Mathf.Max(0f, moveSpeed * settings.enemySpeedMultiplier);
+        waitDuration = Mathf.Max(0f, waitDuration * settings.enemyWaitDurationMultiplier);
     }
 
     private void MoveTowardsCurrentPoint()

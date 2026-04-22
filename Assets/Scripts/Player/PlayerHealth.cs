@@ -69,6 +69,9 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
 
+        if (LevelMetrics.Instance != null)
+            LevelMetrics.Instance.RegisterDamageTaken(amount);
+
         if (SceneTransitionManager.instance != null)
             SceneTransitionManager.instance.SetPlayerHealth(currentHealth);
 
@@ -79,6 +82,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            if (LevelMetrics.Instance != null)
+                LevelMetrics.Instance.RegisterDeath();
+
             Die();
             return;
         }
@@ -93,7 +99,6 @@ public class PlayerHealth : MonoBehaviour
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
 
-        // Si no ha recuperado vida realmente, no hacemos nada más.
         if (currentHealth <= previousHealth)
             return;
 

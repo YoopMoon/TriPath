@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -51,9 +50,7 @@ public class ItemCollected : MonoBehaviour
         collected = true;
 
         if (CollectibleStateManager.Instance != null)
-        {
             CollectibleStateManager.Instance.MarkAsCollected(itemID);
-        }
 
         PlayerHealth playerHealth = collision.transform.GetComponent<PlayerHealth>();
 
@@ -62,11 +59,27 @@ public class ItemCollected : MonoBehaviour
             case CollectibleType.Coin:
                 if (SceneTransitionManager.instance != null)
                     SceneTransitionManager.instance.AddPlayerCoins(1);
+
+                if (LevelMetrics.Instance != null)
+                {
+                    LevelMetrics.Instance.RegisterCoinCollected();
+                    Debug.Log($"[ItemCollected] Coin recogida. CoinsCollected: {LevelMetrics.Instance.CoinsCollected} / {LevelMetrics.Instance.TotalCoins}");
+                }
                 break;
 
             case CollectibleType.Fruit:
                 if (playerHealth != null)
-                    playerHealth.Heal(1);
+                {
+                    int healAmount = 1;
+
+                    if (AdaptiveDifficultyManager.Instance != null)
+                    {
+                        DifficultySettings settings = AdaptiveDifficultyManager.Instance.GetCurrentSettings();
+                        healAmount = settings.fruitHealAmount;
+                    }
+
+                    playerHealth.Heal(healAmount);
+                }
                 break;
         }
 
