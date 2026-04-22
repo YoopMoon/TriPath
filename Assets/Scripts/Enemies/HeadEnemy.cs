@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class SpikeHead : MonoBehaviour
+public class HeadEnemy : MonoBehaviour
 {
     [SerializeField] private int damageAmount = 1;
-    [SerializeField] private float knockbackX = 4f;
+    [SerializeField] private float knockbackX = 2.5f;
     [SerializeField] private float knockbackY = 2.5f;
 
     private void OnCollisionEnter2D(Collision2D collision)

@@ -180,7 +180,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5862799490713208181}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.5986019, y: -0.48082957, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -368,6 +368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   animator: {fileID: 5235903018288992000}
   spriteRenderer: {fileID: 7550803175848160847}
+  topDamageCollider: {fileID: 9031591939084832951}
   maxHealth: 1
   moveSpeed: 0.5
   waitDuration: 2
@@ -376,7 +377,6 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 7311160256632970053}
   - {fileID: 6654613797713105600}
-  topDamageCollider: {fileID: 9031591939084832951}
 --- !u!114 &7346316786822529872
 MonoBehaviour:
   m_ObjectHideFlags: 0
