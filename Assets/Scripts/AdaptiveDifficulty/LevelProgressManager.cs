@@ -60,4 +60,20 @@ public class LevelProgressManager : MonoBehaviour
     {
         levels.Clear();
     }
+
+    public void ResetProgressByMap(string mapPrefix)
+    {
+        List<string> keysToRemove = new List<string>();
+
+        foreach (KeyValuePair<string, LevelProgressData> entry in levels)
+        {
+            if (entry.Key.StartsWith(mapPrefix + "_"))
+                keysToRemove.Add(entry.Key);
+        }
+
+        foreach (string key in keysToRemove)
+        {
+            levels.Remove(key);
+        }
+    }
 }

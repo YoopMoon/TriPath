@@ -7595,7 +7595,7 @@ MonoBehaviour:
     normalPanel: {fileID: 160023108}
     selectedPanel: {fileID: 684842580}
   continueButton: {fileID: 1736084867}
-  firstLevelSceneName: HowToPlayScene
+  nextLevelSceneName: HowToPlayScene
   selectedIndex: 1
 --- !u!4 &1864776083
 Transform:

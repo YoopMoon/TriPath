@@ -141,10 +141,41 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
+        if (LevelMetrics.Instance != null)
+            LevelMetrics.Instance.RegisterDeath();
+
+        DisablePlayerOnDeath();
+
+        if (GameOverManager.Instance != null)
+        {
+            GameOverManager.Instance.HandlePlayerDeath();
+            return;
+        }
+
         if (SceneTransitionManager.instance != null)
             SceneTransitionManager.instance.ClearPlayerHealth();
 
         Destroy(gameObject);
+    }
+
+    private void DisablePlayerOnDeath()
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.simulated = false;
+        }
+
+        Collider2D playerCollider = GetComponent<Collider2D>();
+        if (playerCollider != null)
+            playerCollider.enabled = false;
+
+        PlayerController playerController = GetComponent<PlayerController>();
+        if (playerController != null)
+            playerController.enabled = false;
+
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = false;
     }
 
     public void SetMaxHearts(int hearts)

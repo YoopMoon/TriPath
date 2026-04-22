@@ -33,4 +33,8 @@ public class CollectibleStateManager : MonoBehaviour
     {
         collectedItems.Clear();
     }
+    public void ResetProgressByMap(string mapPrefix)
+    {
+        collectedItems.RemoveWhere(itemId => itemId.StartsWith(mapPrefix + "_"));
+    }
 }

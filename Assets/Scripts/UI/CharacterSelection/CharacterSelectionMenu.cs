@@ -20,7 +20,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     [SerializeField] private Button continueButton;
 
     [Header("Next Scene")]
-    [SerializeField] private string nextLevelSceneName = "HowToPlay";
+    [SerializeField] private string nextLevelSceneName = "HowToPlayScene";
 
     [Header("Initial Selection")]
     [SerializeField] private int selectedIndex = 1;
