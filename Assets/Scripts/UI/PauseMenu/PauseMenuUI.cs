@@ -8,6 +8,10 @@ public class PauseMenuUI : MonoBehaviour
     [SerializeField] private GameObject pauseScreen;
     [SerializeField] private GameObject menuPause;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip clickClip;
+    [SerializeField] private float clickVolume = 1f;
+
     public void OpenPauseMenu()
     {
         if (pauseButton != null)
@@ -72,5 +76,27 @@ public class PauseMenuUI : MonoBehaviour
 
         if (LevelMetrics.Instance != null)
             LevelMetrics.Instance.ResetMetrics();
+    }
+
+    public void PlayClickButton()
+    {
+        if (clickClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(clickClip, clickVolume);
+    }
+
+    public void PauseMusic()
+    {
+        if (MusicManager.Instance != null)
+            MusicManager.Instance.PauseMusic();
+    }
+
+    public void ResumeMusic()
+    {
+
+        if (MusicManager.Instance != null)
+            MusicManager.Instance.ResumeMusic();
     }
 }

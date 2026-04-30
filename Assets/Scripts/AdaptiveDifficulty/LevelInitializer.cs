@@ -18,7 +18,7 @@ public class LevelInitializer : MonoBehaviour
         // y los coleccionables persistidos que deban destruirse desaparezcan.
         yield return null;
 
-        ItemCollected[] items = FindObjectsByType<ItemCollected>(FindObjectsSortMode.None);
+        ItemCollected[] items = FindObjectsByType<ItemCollected>();
 
         int totalCoins = 0;
 

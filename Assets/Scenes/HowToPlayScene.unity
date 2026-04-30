@@ -2384,6 +2384,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HowToPlay
   continueButton: {fileID: 1736084867}
   nextLevelSceneName: Map1_Level1
+  clickClip: {fileID: 8300000, guid: d7f7120097f188c42a0ff485ba99e207, type: 3}
+  clickVolume: 1
 --- !u!4 &712788052
 Transform:
   m_ObjectHideFlags: 0

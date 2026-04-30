@@ -176,6 +176,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BouncePlatform
   isEnabled: 1
+  bounceClip: {fileID: 8300000, guid: 84104584739049d44b1f0ab3f26ef3ec, type: 3}
+  bounceVolume: 0.5
 --- !u!50 &4727776762341163720
 Rigidbody2D:
   serializedVersion: 5

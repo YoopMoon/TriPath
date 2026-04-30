@@ -42,6 +42,15 @@ public class PlayerController : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public Animator animator;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip jumpClip;
+    [SerializeField] private float jumpVolume = 1f;
+
+    [SerializeField] private AudioClip[] stepClips;
+    [SerializeField] private float stepVolume = 0.5f;
+
+    private int currentStepClipIndex = 0;
+
     public bool isInmortal = false;
 
     public PlayerHealth playerHealth;
@@ -175,6 +184,9 @@ public class PlayerController : MonoBehaviour
             // Salto normal desde el suelo o dentro del margen del coyote time.
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
+            // Reproducimos el sonido una sola vez, justo cuando el salto ocurre de verdad.
+            PlayJumpSFX();
+
             // Consumimos el coyote time para que no pueda reutilizarse varias veces
             // con una sola detección de suelo.
             coyoteTimeCounter = 0f;
@@ -189,6 +201,9 @@ public class PlayerController : MonoBehaviour
             // y todavía no lo ha consumido durante este salto.
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, doubleJumpForce);
             canDoubleJump = false;
+
+            // Si quieres que el doble salto use también el mismo sonido, déjalo aquí.
+            PlayJumpSFX();
 
             // Activo la animación específica del doble salto
             // solo cuando realmente se consume el segundo salto.
@@ -263,5 +278,42 @@ public class PlayerController : MonoBehaviour
     {
         doubleJumpEnabled = enabled;
         canDoubleJump = enabled && FloorChecker.isFloorDetected;
+    }
+
+    private void PlayJumpSFX()
+    {
+        if (jumpClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(jumpClip, jumpVolume);
+    }
+
+    public void PlayStepSFX()
+    {
+        // Si no hay clips configurados, no hacemos nada.
+        if (stepClips == null || stepClips.Length == 0)
+            return;
+
+        // Evita que suene si el personaje no está realmente en el suelo.
+        if (!FloorChecker.isFloorDetected)
+            return;
+
+        // Evita que suene si prácticamente no se está moviendo.
+        if (Mathf.Abs(rb.linearVelocity.x) < runAnimationThreshold)
+            return;
+
+        AudioClip clipToPlay = stepClips[currentStepClipIndex];
+
+        // Avanzamos al siguiente clip para alternar los dos pasos.
+        currentStepClipIndex++;
+        if (currentStepClipIndex >= stepClips.Length)
+            currentStepClipIndex = 0;
+
+        if (clipToPlay == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(clipToPlay, stepVolume);
     }
 }

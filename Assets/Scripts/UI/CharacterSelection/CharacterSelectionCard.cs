@@ -8,7 +8,6 @@ public class CharacterSelectionCard : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("Pulsado");
         if (selectionMenu != null)
             selectionMenu.SelectCharacter(characterIndex);
     }

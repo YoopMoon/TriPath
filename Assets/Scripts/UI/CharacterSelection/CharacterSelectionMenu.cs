@@ -25,6 +25,14 @@ public class CharacterSelectionMenu : MonoBehaviour
     [Header("Initial Selection")]
     [SerializeField] private int selectedIndex = 1;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip selectionClip;
+    [SerializeField] private float selectionVolume = 0.25f;
+    [SerializeField] private AudioClip clickClip;
+    [SerializeField] private float clickVolume = 1f;
+
+    private bool isLoadingScene;
+
     private void Start()
     {
         if (characterSlots == null || characterSlots.Length == 0)
@@ -73,12 +81,17 @@ public class CharacterSelectionMenu : MonoBehaviour
 
     private void ChangeSelection(int direction)
     {
+        int previousIndex = selectedIndex;
+
         selectedIndex += direction;
 
         if (selectedIndex < 0)
             selectedIndex = characterSlots.Length - 1;
         else if (selectedIndex >= characterSlots.Length)
             selectedIndex = 0;
+
+        if (selectedIndex != previousIndex)
+            PlaySelectionSFX();
 
         UpdateVisualSelection();
     }
@@ -105,11 +118,13 @@ public class CharacterSelectionMenu : MonoBehaviour
         if (index < 0 || index >= characterSlots.Length)
             return;
 
+        // Solo suena si realmente se cambia a otra card distinta.
+        if (selectedIndex != index)
+            PlaySelectionSFX();
+
         selectedIndex = index;
         UpdateVisualSelection();
     }
-
-    private bool isLoadingScene;
 
     public void ContinueToGame()
     {
@@ -120,6 +135,8 @@ public class CharacterSelectionMenu : MonoBehaviour
             return;
 
         isLoadingScene = true;
+
+        PlayClickSFX();
 
         SelectedPlayerStore.SelectedPlayer = characterSlots[selectedIndex].playerType;
 
@@ -133,4 +150,21 @@ public class CharacterSelectionMenu : MonoBehaviour
         SceneManager.LoadScene(nextLevelSceneName);
     }
 
+    private void PlaySelectionSFX()
+    {
+        if (selectionClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(selectionClip, selectionVolume);
+    }
+
+    private void PlayClickSFX()
+    {
+        if (clickClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(clickClip, clickVolume);
+    }
 }

@@ -212,6 +212,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3196029559652541973}
+        m_TargetAssemblyTypeName: PauseMenuUI, Assembly-CSharp
+        m_MethodName: PlayClickButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3196029559652541973}
+        m_TargetAssemblyTypeName: PauseMenuUI, Assembly-CSharp
+        m_MethodName: PauseMusic
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3196029559652541973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,6 +251,8 @@ MonoBehaviour:
   pauseButton: {fileID: 2167630487972298780}
   pauseScreen: {fileID: 2802470202150249211}
   menuPause: {fileID: 434537854268698895}
+  clickClip: {fileID: 8300000, guid: d7f7120097f188c42a0ff485ba99e207, type: 3}
+  clickVolume: 1
 --- !u!1 &2524731575225026907
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,6 +620,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 717393212097759992}
+        m_TargetAssemblyTypeName: PauseMenuUI, Assembly-CSharp
+        m_MethodName: PlayClickButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 717393212097759992}
+        m_TargetAssemblyTypeName: PauseMenuUI, Assembly-CSharp
+        m_MethodName: ResumeMusic
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0.75
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &717393212097759992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -609,6 +659,8 @@ MonoBehaviour:
   pauseButton: {fileID: 2167630487972298780}
   pauseScreen: {fileID: 2802470202150249211}
   menuPause: {fileID: 434537854268698895}
+  clickClip: {fileID: 8300000, guid: d7f7120097f188c42a0ff485ba99e207, type: 3}
+  clickVolume: 1
 --- !u!1 &3651599107677768302
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,6 +1032,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5599659813975665939}
+        m_TargetAssemblyTypeName: PauseMenuUI, Assembly-CSharp
+        m_MethodName: PlayClickButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5599659813975665939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -995,6 +1059,8 @@ MonoBehaviour:
   pauseButton: {fileID: 0}
   pauseScreen: {fileID: 2802470202150249211}
   menuPause: {fileID: 434537854268698895}
+  clickClip: {fileID: 8300000, guid: d7f7120097f188c42a0ff485ba99e207, type: 3}
+  clickVolume: 1
 --- !u!1 &8786386067555147334
 GameObject:
   m_ObjectHideFlags: 0
@@ -1129,6 +1195,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3128479885355875035}
+        m_TargetAssemblyTypeName: PauseMenuUI, Assembly-CSharp
+        m_MethodName: PlayClickButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3128479885355875035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1144,6 +1222,8 @@ MonoBehaviour:
   pauseButton: {fileID: 0}
   pauseScreen: {fileID: 2802470202150249211}
   menuPause: {fileID: 434537854268698895}
+  clickClip: {fileID: 8300000, guid: d7f7120097f188c42a0ff485ba99e207, type: 3}
+  clickVolume: 1
 --- !u!1 &8891555926498477020
 GameObject:
   m_ObjectHideFlags: 0

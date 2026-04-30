@@ -11,6 +11,11 @@ public class HowToPlay : MonoBehaviour
     [Header("Next Scene")]
     [SerializeField] private string nextLevelSceneName = "Map1_Level1";
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip clickClip;
+    [SerializeField] private float clickVolume = 1f;
+
+
     private bool isLoadingScene;
 
     private void Start()
@@ -39,6 +44,18 @@ public class HowToPlay : MonoBehaviour
             return;
 
         isLoadingScene = true;
+
+        PlayClickSFX();
+
         SceneManager.LoadScene(nextLevelSceneName);
+    }
+
+    private void PlayClickSFX()
+    {
+        if (clickClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(clickClip, clickVolume);
     }
 }

@@ -176,6 +176,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
   collectibleType: 1
+  collectedClip: {fileID: 8300000, guid: 0109b258a31dc3d4397c05b1dff9b51b, type: 3}
+  collectedVolume: 0.15
 --- !u!1 &5619318294832295380
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,12 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip damageClip;
+    [SerializeField] private float damageVolume = 1f;
+    [SerializeField] private AudioClip healClip;
+    [SerializeField] private float healVolume = 1f;
+
     public bool hitReceived;
 
     public int MaxHealth => maxHearts * 4;
@@ -69,6 +75,12 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
 
+        if (damageClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(damageClip, damageVolume);
+
         if (LevelMetrics.Instance != null)
             LevelMetrics.Instance.RegisterDamageTaken(amount);
 
@@ -104,6 +116,13 @@ public class PlayerHealth : MonoBehaviour
 
         if (SceneTransitionManager.instance != null)
             SceneTransitionManager.instance.SetPlayerHealth(currentHealth);
+
+        if (healClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(healClip, healVolume);
+
 
         OnHealthChanged?.Invoke();
         OnHealed?.Invoke();

@@ -7597,6 +7597,10 @@ MonoBehaviour:
   continueButton: {fileID: 1736084867}
   nextLevelSceneName: HowToPlayScene
   selectedIndex: 1
+  selectionClip: {fileID: 8300000, guid: dacb2659743b37e4b9184efa4225ec0b, type: 3}
+  selectionVolume: 0.15
+  clickClip: {fileID: 8300000, guid: d7f7120097f188c42a0ff485ba99e207, type: 3}
+  clickVolume: 1
 --- !u!4 &1864776083
 Transform:
   m_ObjectHideFlags: 0

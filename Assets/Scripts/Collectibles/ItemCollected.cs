@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.VFX;
 
 public class ItemCollected : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class ItemCollected : MonoBehaviour
 
     [Header("Collectible Settings")]
     public CollectibleType collectibleType = CollectibleType.Fruit;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip collectedClip;
+    [SerializeField] private float collectedVolume = 1f;
 
     private bool collected = false;
     private SpriteRenderer spriteRenderer;
@@ -48,6 +53,8 @@ public class ItemCollected : MonoBehaviour
             return;
 
         collected = true;
+
+        PlayCollectedSound();
 
         if (CollectibleStateManager.Instance != null)
             CollectibleStateManager.Instance.MarkAsCollected(itemID);
@@ -90,5 +97,14 @@ public class ItemCollected : MonoBehaviour
             collectedEffect.SetActive(true);
 
         Destroy(gameObject, 0.5f);
+    }
+
+    private void PlayCollectedSound()
+    {
+        if (collectedClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(collectedClip, collectedVolume);
     }
 }

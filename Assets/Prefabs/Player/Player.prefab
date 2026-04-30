@@ -347,6 +347,12 @@ MonoBehaviour:
   coyoteTime: 0.1
   spriteRenderer: {fileID: 1337075344054466720}
   animator: {fileID: 6960591132351920463}
+  jumpClip: {fileID: 8300000, guid: 07ae271074a936f44b069679ca575546, type: 3}
+  jumpVolume: 0.5
+  stepClips:
+  - {fileID: 8300000, guid: 3a5fb717aa0c9c542bb14ef6a8be2eaa, type: 3}
+  - {fileID: 8300000, guid: 3a5fb717aa0c9c542bb14ef6a8be2eaa, type: 3}
+  stepVolume: 1
   isInmortal: 0
   playerHealth: {fileID: 7119377418927810174}
 --- !u!114 &7733158684958589704
@@ -392,6 +398,10 @@ MonoBehaviour:
   blinkInterval: 0.1
   rb: {fileID: 6324891557348267882}
   spriteRenderer: {fileID: 1337075344054466720}
+  damageClip: {fileID: 8300000, guid: 4536e9c97e214a040b10a5316a3b2941, type: 3}
+  damageVolume: 1
+  healClip: {fileID: 8300000, guid: 3484f990080c00e4e867462de60df85e, type: 3}
+  healVolume: 1
   hitReceived: 0
 --- !u!114 &3990337104940614192
 MonoBehaviour:

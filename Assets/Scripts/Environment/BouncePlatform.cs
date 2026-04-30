@@ -14,6 +14,10 @@ public class BouncePlatform : MonoBehaviour
     private readonly float bounceSpeed = 1f;      // velocidad de subida/rebote
     private readonly float holdAtBottom = 0.1f;   // pausa abajo antes de subir
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip bounceClip;
+    [SerializeField] private float bounceVolume = 0.5f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -22,6 +26,14 @@ public class BouncePlatform : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!isEnabled)
+        {
+            if (!IsPlayerComingFromAbove(collision))
+                return;
+
+            PlayBounceSFX();
+        }
+
         if (collision.gameObject.CompareTag("Player") && !isAnimating && isEnabled)
         {
             foreach (ContactPoint2D contact in collision.contacts)
@@ -51,6 +63,9 @@ public class BouncePlatform : MonoBehaviour
 
         rb.MovePosition(downTarget);
 
+        // Sonido justo al terminar la bajada
+        PlayBounceSFX();
+
         // Pausa breve abajo
         yield return new WaitForSeconds(holdAtBottom);
 
@@ -65,5 +80,27 @@ public class BouncePlatform : MonoBehaviour
         rb.MovePosition(originalPosition);
 
         isAnimating = false;
+    }
+
+    private bool IsPlayerComingFromAbove(Collision2D collision)
+    {
+        foreach (ContactPoint2D contact in collision.contacts)
+        {
+            // Si la normal apunta hacia abajo desde el punto de vista del jugador,
+            // significa que el jugador ha tocado la parte superior del trampolín.
+            if (contact.normal.y < -0.5f)
+                return true;
+        }
+
+        return false;
+    }
+
+    private void PlayBounceSFX()
+    {
+        if (bounceClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(bounceClip, bounceVolume);
     }
 }
