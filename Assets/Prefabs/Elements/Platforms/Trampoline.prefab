@@ -177,4 +177,4 @@ MonoBehaviour:
   animator: {fileID: 4252915082209714360}
   jumpForce: 5
   bounceClip: {fileID: 8300000, guid: d5b483df7ac3f6e4c991dd063f17dfb6, type: 3}
-  bounceVolume: 0.5
+  bounceVolume: 0.3

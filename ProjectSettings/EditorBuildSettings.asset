@@ -21,13 +21,19 @@ EditorBuildSettings:
     path: Assets/Scenes/HowToPlayScene.unity
     guid: 6649bd88af2551c45bd6a11c15c6f56f
   - enabled: 1
-    path: Assets/Scenes/Map1_Level1.unity
+    path: Assets/Scenes/Map1/Map1_Level1.unity
     guid: 4793718adbb348049a4122c3410f4edc
   - enabled: 1
-    path: Assets/Scenes/Map1_Level2.unity
+    path: Assets/Scenes/Map1/Map1_Level2.unity
     guid: 55ed7666e2166e943ada47be8f4006b4
   - enabled: 1
-    path: Assets/Scenes/Map1_Level3.unity
+    path: Assets/Scenes/Map1/Map1_Level3.unity
+    guid: 1441cca3a7ba9ac48ab201327a01c79e
+  - enabled: 1
+    path: Assets/Scenes/Map1/Map1_Level4.unity
     guid: 2e451d2cfdc9bb94383c1337fb988b1a
+  - enabled: 1
+    path: Assets/Scenes/Map1/Map1_Level5.unity
+    guid: 9ada1869453f1524995db16ed585d655
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

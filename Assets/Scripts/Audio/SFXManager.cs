@@ -4,7 +4,12 @@ public class SFXManager : MonoBehaviour
 {
     public static SFXManager Instance { get; private set; }
 
+    [Header("References")]
     [SerializeField] private AudioSource sfxSource;
+
+    [Header("Volume Settings")]
+    [Range(0f, 1f)]
+    [SerializeField] private float masterSfxVolume = 1f;
 
     private void Awake()
     {
@@ -21,7 +26,8 @@ public class SFXManager : MonoBehaviour
         {
             sfxSource.playOnAwake = false;
             sfxSource.loop = false;
-            sfxSource.spatialBlend = 0f; // 2D
+            sfxSource.spatialBlend = 0f;
+            sfxSource.volume = 1f;
         }
     }
 
@@ -30,6 +36,13 @@ public class SFXManager : MonoBehaviour
         if (clip == null || sfxSource == null)
             return;
 
-        sfxSource.PlayOneShot(clip, volume);
+        float finalVolume = Mathf.Clamp01(volume) * masterSfxVolume;
+
+        sfxSource.PlayOneShot(clip, finalVolume);
+    }
+
+    public void SetMasterSfxVolume(float volume)
+    {
+        masterSfxVolume = Mathf.Clamp01(volume);
     }
 }

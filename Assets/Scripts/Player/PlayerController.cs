@@ -47,12 +47,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpVolume = 1f;
 
     [SerializeField] private AudioClip[] stepClips;
-    [SerializeField] private float stepVolume = 0.5f;
+    [SerializeField] private float stepVolume = 1f;
 
     private int currentStepClipIndex = 0;
-
-    public bool isInmortal = false;
-
     public PlayerHealth playerHealth;
 
     void Start()

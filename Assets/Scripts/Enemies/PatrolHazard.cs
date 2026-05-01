@@ -16,12 +16,17 @@ public class PatrolHazard : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private MovementMode movementMode = MovementMode.Horizontal;
     [SerializeField] private Transform[] patrolPoints;
+
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float upwardSpeed = 1f;
     [SerializeField] private float fallAcceleration = 10f;
     [SerializeField] private float maxFallSpeed = 7f;
-    [SerializeField] private float waitDuration = 0f;
+
+    [SerializeField] private float waitDuration = 2f;
     [SerializeField] private float arrivalThreshold = 0.05f;
+
+    [Header("Vertical Movement")]
+    [SerializeField] private bool waitOnlyAtTopWhenVertical = true;
 
     [Header("Impact Settings")]
     [SerializeField] private string floorTag = "Floor";
@@ -33,6 +38,10 @@ public class PatrolHazard : MonoBehaviour
     [SerializeField] private string leftHitAnimationName = "LeftHit";
     [SerializeField] private string rightHitAnimationName = "RightHit";
     [SerializeField] private string topHitAnimationName = "TopHit";
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip impactClip;
+    [SerializeField] private float impactVolume = 0.5f;
 
     private int currentPointIndex;
     private float waitTimer;
@@ -52,25 +61,15 @@ public class PatrolHazard : MonoBehaviour
 
     private void Start()
     {
-        waitTimer = waitDuration;
-    }
-
-    private void ApplyDifficultySettings()
-    {
-        if (AdaptiveDifficultyManager.Instance == null)
-            return;
-
-        DifficultySettings settings = AdaptiveDifficultyManager.Instance.GetCurrentSettings();
-
-        moveSpeed = Mathf.Max(0f, moveSpeed * settings.enemySpeedMultiplier);
-        upwardSpeed = Mathf.Max(0f, upwardSpeed * settings.enemySpeedMultiplier);
-        waitDuration = Mathf.Max(0f, waitDuration * settings.enemyWaitDurationMultiplier);
-        impactPauseDuration = Mathf.Max(0f, impactPauseDuration * settings.enemyWaitDurationMultiplier);
+        waitTimer = 0f;
     }
 
     private void FixedUpdate()
     {
         if (rb == null || patrolPoints == null || patrolPoints.Length == 0)
+            return;
+
+        if (patrolPoints[currentPointIndex] == null)
             return;
 
         if (isPausedByImpact)
@@ -80,6 +79,29 @@ public class PatrolHazard : MonoBehaviour
         }
 
         MoveTowardsCurrentPoint();
+    }
+
+    private void ApplyDifficultySettings()
+    {
+        if (AdaptiveDifficultyManager.Instance == null)
+            return;
+
+        DifficultySettings settings = AdaptiveDifficultyManager.Instance.GetCurrentSettings();
+
+        float speedMultiplier = settings.enemySpeedMultiplier;
+        float waitMultiplier = settings.enemyWaitDurationMultiplier;
+
+        moveSpeed = Mathf.Max(0f, moveSpeed * speedMultiplier);
+        upwardSpeed = Mathf.Max(0f, upwardSpeed * speedMultiplier);
+
+        // Para hazards verticales que caen, también hacemos que la caída escale con la dificultad.
+        fallAcceleration = Mathf.Max(0f, fallAcceleration * speedMultiplier);
+        maxFallSpeed = Mathf.Max(0f, maxFallSpeed * speedMultiplier);
+
+        // En dificultades más altas normalmente este multiplicador debería ser menor,
+        // para que espere menos tiempo antes de moverse de nuevo.
+        waitDuration = Mathf.Max(0f, waitDuration * waitMultiplier);
+        impactPauseDuration = Mathf.Max(0f, impactPauseDuration * waitMultiplier);
     }
 
     private void ApplyMovementConstraints()
@@ -148,12 +170,18 @@ public class PatrolHazard : MonoBehaviour
         if (distanceToTarget > arrivalThreshold)
             return;
 
+        rb.MovePosition(targetPosition);
         currentFallSpeed = 0f;
 
-        if (waitTimer > 0f)
+        if (ShouldWaitAtCurrentPoint(targetPosition))
         {
+            if (waitTimer <= 0f)
+                waitTimer = waitDuration;
+
             waitTimer -= Time.fixedDeltaTime;
-            return;
+
+            if (waitTimer > 0f)
+                return;
         }
 
         MoveToNextPoint();
@@ -198,6 +226,39 @@ public class PatrolHazard : MonoBehaviour
         return new Vector2(currentPosition.x, newY);
     }
 
+    private bool ShouldWaitAtCurrentPoint(Vector2 targetPosition)
+    {
+        if (waitDuration <= 0f)
+            return false;
+
+        if (movementMode != MovementMode.Vertical)
+            return true;
+
+        if (!waitOnlyAtTopWhenVertical)
+            return true;
+
+        return IsTopPoint(targetPosition);
+    }
+
+    private bool IsTopPoint(Vector2 targetPosition)
+    {
+        if (patrolPoints == null || patrolPoints.Length == 0)
+            return false;
+
+        float highestY = patrolPoints[0].position.y;
+
+        for (int i = 1; i < patrolPoints.Length; i++)
+        {
+            if (patrolPoints[i] == null)
+                continue;
+
+            if (patrolPoints[i].position.y > highestY)
+                highestY = patrolPoints[i].position.y;
+        }
+
+        return Mathf.Abs(targetPosition.y - highestY) <= arrivalThreshold;
+    }
+
     private void MoveToNextPoint()
     {
         currentPointIndex++;
@@ -205,7 +266,7 @@ public class PatrolHazard : MonoBehaviour
         if (currentPointIndex >= patrolPoints.Length)
             currentPointIndex = 0;
 
-        waitTimer = waitDuration;
+        waitTimer = 0f;
         currentFallSpeed = 0f;
     }
 
@@ -278,6 +339,8 @@ public class PatrolHazard : MonoBehaviour
 
         AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
 
+        PlaySFXImpact();
+
         if (currentState.IsName(animationName) && currentState.normalizedTime < 1f)
             return;
 
@@ -317,5 +380,14 @@ public class PatrolHazard : MonoBehaviour
             if (nextPoint != null)
                 Gizmos.DrawLine(pointPosition, nextPoint.position);
         }
+    }
+
+    private void PlaySFXImpact()
+    {
+        if (impactClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(impactClip, impactVolume);
     }
 }

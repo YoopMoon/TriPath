@@ -158,7 +158,7 @@ MonoBehaviour:
     musicClip: {fileID: 8300000, guid: 8ac84876b2e1647eb9e7e8e20e749d2e, type: 3}
   - worldPrefix: Map3
     musicClip: {fileID: 8300000, guid: 58c05f69089b94e8fb546633fd1593da, type: 3}
-  defaultVolume: 0.15
+  defaultVolume: 0.12
 --- !u!1 &7550046271439610597
 GameObject:
   m_ObjectHideFlags: 0
