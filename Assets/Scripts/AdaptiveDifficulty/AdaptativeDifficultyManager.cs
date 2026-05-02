@@ -13,11 +13,22 @@ public class AdaptiveDifficultyManager : MonoBehaviour
     [SerializeField] private DifficultySettings normalSettings;
     [SerializeField] private DifficultySettings hardSettings;
 
+    [Header("Time Criteria")]
+    [SerializeField] private float goodTimeThreshold = 120f;
+    [SerializeField] private float acceptableTimeThreshold = 180f;
+
+    [Header("Damage Criteria")]
+    [SerializeField] private int lowDamageThreshold = 2;
+    [SerializeField] private int mediumDamageThreshold = 4;
+
+    [Header("Coin Criteria")]
+    [SerializeField] private float highCoinPercentageThreshold = 0.8f;
+    [SerializeField] private float mediumCoinPercentageThreshold = 0.5f;
+
     [Header("Last Evaluation Debug")]
     [SerializeField] private int lastScore;
     [SerializeField] private float lastTime;
     [SerializeField] private int lastDamage;
-    [SerializeField] private int lastDeaths;
     [SerializeField] private float lastCoinPercentage;
 
     public AdaptiveDifficulty CurrentDifficulty => currentDifficulty;
@@ -44,36 +55,79 @@ public class AdaptiveDifficultyManager : MonoBehaviour
 
         float time = LevelMetrics.Instance.ElapsedTime;
         int damage = LevelMetrics.Instance.DamageTaken;
-        int deaths = LevelMetrics.Instance.Deaths;
         float coinPercentage = LevelMetrics.Instance.CoinPercentage;
 
         lastTime = time;
         lastDamage = damage;
-        lastDeaths = deaths;
         lastCoinPercentage = coinPercentage;
 
-        if (time <= 120f) score += 2;
-        else if (time <= 180f) score += 1;
-
-        if (damage <= 4) score += 2;
-        else if (damage <= 8) score += 1;
-
-        if (coinPercentage >= 0.8f) score += 2;
-        else if (coinPercentage >= 0.5f) score += 1;
-
-        if (deaths == 0) score += 2;
-        else if (deaths == 1) score += 1;
+        score += EvaluateTimeScore(time);
+        score += EvaluateDamageScore(damage);
+        score += EvaluateCoinScore(coinPercentage);
 
         lastScore = score;
 
-        if (score >= 7)
-            currentDifficulty = AdaptiveDifficulty.Hard;
-        else if (score >= 4)
-            currentDifficulty = AdaptiveDifficulty.Normal;
-        else
-            currentDifficulty = AdaptiveDifficulty.Easy;
+        currentDifficulty = GetDifficultyFromScore(score, damage);
 
-        Debug.Log($"Adaptive Difficulty -> Score: {score}, New Difficulty: {currentDifficulty}");
+        Debug.Log(
+            $"Adaptive Difficulty -> " +
+            $"Time: {time:0.00}s, " +
+            $"Damage: {damage}, " +
+            $"Coins: {coinPercentage * 100f:0.##}%, " +
+            $"Score: {score}/6, " +
+            $"New Difficulty: {currentDifficulty}"
+        );
+    }
+
+    private int EvaluateTimeScore(float time)
+    {
+        if (time <= goodTimeThreshold)
+            return 2;
+
+        if (time <= acceptableTimeThreshold)
+            return 1;
+
+        return 0;
+    }
+
+    private int EvaluateDamageScore(int damage)
+    {
+        if (damage <= lowDamageThreshold)
+            return 2;
+
+        if (damage <= mediumDamageThreshold)
+            return 1;
+
+        return 0;
+    }
+
+    private int EvaluateCoinScore(float coinPercentage)
+    {
+        if (coinPercentage >= highCoinPercentageThreshold)
+            return 2;
+
+        if (coinPercentage >= mediumCoinPercentageThreshold)
+            return 1;
+
+        return 0;
+    }
+
+    private AdaptiveDifficulty GetDifficultyFromScore(int score, int damage)
+    {
+        // Regla de seguridad:
+        // si el jugador recibe mucho daño, no subimos a Hard aunque haya ido rápido
+        // o haya recogido muchas monedas.
+        if (damage > mediumDamageThreshold)
+            return AdaptiveDifficulty.Normal;
+
+        // Con 3 criterios, la puntuación máxima es 6.
+        if (score >= 5)
+            return AdaptiveDifficulty.Hard;
+
+        if (score >= 3)
+            return AdaptiveDifficulty.Normal;
+
+        return AdaptiveDifficulty.Easy;
     }
 
     public DifficultySettings GetCurrentSettings()
@@ -99,7 +153,6 @@ public class AdaptiveDifficultyManager : MonoBehaviour
         lastScore = 0;
         lastTime = 0f;
         lastDamage = 0;
-        lastDeaths = 0;
         lastCoinPercentage = 0f;
     }
 }

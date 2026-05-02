@@ -12,6 +12,7 @@ public class EnemyMovement : MonoBehaviour
     [Header("References")]
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private bool spriteRendererFlipEnabled;
     [SerializeField] private Collider2D topDamageCollider;
 
     [Header("Enemy Stats")]
@@ -142,17 +143,20 @@ public class EnemyMovement : MonoBehaviour
 
     private void UpdateSpriteDirection(Vector2 targetPosition)
     {
-        float horizontalDirection = targetPosition.x - (float)transform.position.x;
+        if (spriteRendererFlipEnabled)
+        {
+            float horizontalDirection = targetPosition.x - (float)transform.position.x;
 
-        if (horizontalDirection > 0.01f)
-        {
-            spriteRenderer.flipX = true;
-            UpdateTopColliderSide(true);
-        }
-        else if (horizontalDirection < -0.01f)
-        {
-            spriteRenderer.flipX = false;
-            UpdateTopColliderSide(false);
+            if (horizontalDirection > 0.01f)
+            {
+                spriteRenderer.flipX = true;
+                UpdateTopColliderSide(true);
+            }
+            else if (horizontalDirection < -0.01f)
+            {
+                spriteRenderer.flipX = false;
+                UpdateTopColliderSide(false);
+            }
         }
     }
 

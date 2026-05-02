@@ -75,7 +75,7 @@ public class PauseMenuUI : MonoBehaviour
             SceneTransitionManager.instance.ResetProgress();
 
         if (LevelMetrics.Instance != null)
-            LevelMetrics.Instance.ResetMetrics();
+            LevelMetrics.Instance.ResetProgress();
     }
 
     public void PlayClickButton()

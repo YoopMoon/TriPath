@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.VFX;
 
 public class ItemCollected : MonoBehaviour
 {
@@ -21,6 +20,8 @@ public class ItemCollected : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private GameObject collectedEffect;
     private string itemID;
+
+    private bool isCoinCollected;
 
     private void Awake()
     {
@@ -64,13 +65,18 @@ public class ItemCollected : MonoBehaviour
         switch (collectibleType)
         {
             case CollectibleType.Coin:
+                if (isCoinCollected)
+                    return;
+
                 if (SceneTransitionManager.instance != null)
                     SceneTransitionManager.instance.AddPlayerCoins(1);
+
+                isCoinCollected = true;
 
                 if (LevelMetrics.Instance != null)
                 {
                     LevelMetrics.Instance.RegisterCoinCollected();
-                    Debug.Log($"[ItemCollected] Coin recogida. CoinsCollected: {LevelMetrics.Instance.CoinsCollected} / {LevelMetrics.Instance.TotalCoins}");
+                    //Debug.Log($"[ItemCollected] Coin recogida. CoinsCollected: {LevelMetrics.Instance.CoinsCollected} / {LevelMetrics.Instance.TotalCoins}");
                 }
                 break;
 

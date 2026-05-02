@@ -306,6 +306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   animator: {fileID: 8357455916802693730}
   spriteRenderer: {fileID: 6064918169579220467}
+  spriteRendererFlipEnabled: 1
   topDamageCollider: {fileID: 0}
   maxHealth: 1
   moveSpeed: 0.5

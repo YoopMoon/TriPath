@@ -141,11 +141,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   fullRotation: 0
-  rotationSpeed: 80
+  rotationSpeed: 50
   clockwise: 1
   swingAngle: 180
-  swingGravity: 8
+  swingGravity: 4
   swingDamping: 0
+  useAdaptiveDifficulty: 1
+  fullRotationAdaptiveInfluence: 1
+  swingAdaptiveInfluence: 0.25
+  minSwingMultiplier: 0.8
+  maxSwingMultiplier: 1.2
 --- !u!1 &5288172133910643547
 GameObject:
   m_ObjectHideFlags: 0

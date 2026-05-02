@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -37,7 +38,8 @@ public class MusicManager : MonoBehaviour
     }
 
     [Header("References")]
-    [SerializeField] private AudioSource musicSource;
+    [SerializeField] public AudioSource firstMusicSource;
+    [SerializeField] public AudioSource secondMusicSource;
 
     [Header("Scene Music")]
     // Música específica de escena.
@@ -56,11 +58,20 @@ public class MusicManager : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private float defaultVolume = 0.15f;
+    [SerializeField] private float crossfadeDuration = 1.5f;
+
+    // AudioSource que está sonando actualmente.
+    private AudioSource activeMusicSource;
+
+    // AudioSource preparado para entrar durante el crossfade.
+    private AudioSource inactiveMusicSource;
 
     // Guardamos la última información reproducida para no reiniciar la pista innecesariamente.
     private string currentSceneName = string.Empty;
     private string currentWorldPrefix = string.Empty;
     private AudioClip currentClip;
+
+    private Coroutine crossfadeCoroutine;
 
     private void Awake()
     {
@@ -74,14 +85,17 @@ public class MusicManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Configuración base del AudioSource de música.
-        if (musicSource != null)
-        {
-            musicSource.playOnAwake = false;
-            musicSource.loop = true;
-            musicSource.spatialBlend = 0f; // Música en 2D
-            musicSource.volume = defaultVolume;
-        }
+        ConfigureAudioSource(firstMusicSource);
+        ConfigureAudioSource(secondMusicSource);
+
+        activeMusicSource = firstMusicSource;
+        inactiveMusicSource = secondMusicSource;
+
+        if (activeMusicSource != null)
+            activeMusicSource.volume = defaultVolume;
+
+        if (inactiveMusicSource != null)
+            inactiveMusicSource.volume = 0f;
     }
 
     private void OnEnable()
@@ -100,6 +114,17 @@ public class MusicManager : MonoBehaviour
         UpdateMusicForScene(SceneManager.GetActiveScene().name);
     }
 
+    private void ConfigureAudioSource(AudioSource source)
+    {
+        if (source == null)
+            return;
+
+        source.playOnAwake = false;
+        source.loop = true;
+        source.spatialBlend = 0f; // Música en 2D
+        source.volume = 0f;
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Cada vez que cambia la escena, revisamos qué música debe sonar.
@@ -108,7 +133,7 @@ public class MusicManager : MonoBehaviour
 
     private void UpdateMusicForScene(string sceneName)
     {
-        if (musicSource == null)
+        if (activeMusicSource == null || inactiveMusicSource == null)
             return;
 
         // Orden de prioridad:
@@ -125,30 +150,114 @@ public class MusicManager : MonoBehaviour
         if (newClip == null)
             newClip = GetClipForWorld(newWorldPrefix);
 
-        // Si no hay música definida para esta escena, paramos.
+        // Si no hay música definida para esta escena, paramos con fade out.
         if (newClip == null)
         {
-            StopMusic();
+            FadeOutMusic();
             return;
         }
 
         // Si ya está sonando este mismo clip, no lo reiniciamos.
-        // Esto es justo lo que permite continuidad entre MainMenu,
+        // Esto permite continuidad entre MainMenu,
         // CharacterSelectScene y HowToPlayScene si comparten pista.
-        if (currentClip == newClip && musicSource.isPlaying)
+        if (currentClip == newClip && activeMusicSource.isPlaying)
         {
             currentSceneName = sceneName;
             currentWorldPrefix = newWorldPrefix;
             return;
         }
 
-        // Si el clip cambia, actualizamos y reproducimos el nuevo.
         currentSceneName = sceneName;
         currentWorldPrefix = newWorldPrefix;
         currentClip = newClip;
 
-        musicSource.clip = newClip;
-        musicSource.Play();
+        CrossfadeToClip(newClip);
+    }
+
+    private void CrossfadeToClip(AudioClip newClip)
+    {
+        if (newClip == null)
+            return;
+
+        if (crossfadeCoroutine != null)
+            StopCoroutine(crossfadeCoroutine);
+
+        crossfadeCoroutine = StartCoroutine(CrossfadeCoroutine(newClip));
+    }
+
+    private IEnumerator CrossfadeCoroutine(AudioClip newClip)
+    {
+        inactiveMusicSource.clip = newClip;
+        inactiveMusicSource.volume = 0f;
+        inactiveMusicSource.loop = true;
+        inactiveMusicSource.Play();
+
+        float timer = 0f;
+        float startActiveVolume = activeMusicSource.isPlaying ? activeMusicSource.volume : 0f;
+
+        while (timer < crossfadeDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / crossfadeDuration;
+
+            activeMusicSource.volume = Mathf.Lerp(startActiveVolume, 0f, t);
+            inactiveMusicSource.volume = Mathf.Lerp(0f, defaultVolume, t);
+
+            yield return null;
+        }
+
+        activeMusicSource.Stop();
+        activeMusicSource.clip = null;
+        activeMusicSource.volume = 0f;
+
+        inactiveMusicSource.volume = defaultVolume;
+
+        SwapAudioSources();
+
+        crossfadeCoroutine = null;
+    }
+
+    private void FadeOutMusic()
+    {
+        currentClip = null;
+        currentSceneName = string.Empty;
+        currentWorldPrefix = string.Empty;
+
+        if (crossfadeCoroutine != null)
+            StopCoroutine(crossfadeCoroutine);
+
+        crossfadeCoroutine = StartCoroutine(FadeOutCoroutine());
+    }
+
+    private IEnumerator FadeOutCoroutine()
+    {
+        float timer = 0f;
+        float startVolume = activeMusicSource.volume;
+
+        while (timer < crossfadeDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / crossfadeDuration;
+
+            activeMusicSource.volume = Mathf.Lerp(startVolume, 0f, t);
+
+            yield return null;
+        }
+
+        activeMusicSource.Stop();
+        activeMusicSource.clip = null;
+        activeMusicSource.volume = 0f;
+
+        crossfadeCoroutine = null;
+    }
+
+    private void SwapAudioSources()
+    {
+        AudioSource temp = activeMusicSource;
+        activeMusicSource = inactiveMusicSource;
+        inactiveMusicSource = temp;
     }
 
     private AudioClip GetClipForScene(string sceneName)
@@ -222,19 +331,30 @@ public class MusicManager : MonoBehaviour
 
     public void SetVolume(float volume)
     {
-        if (musicSource == null)
-            return;
+        defaultVolume = Mathf.Clamp01(volume);
 
-        musicSource.volume = Mathf.Clamp01(volume);
+        if (activeMusicSource != null)
+            activeMusicSource.volume = defaultVolume;
     }
 
     public void StopMusic()
     {
-        if (musicSource == null)
-            return;
+        if (crossfadeCoroutine != null)
+            StopCoroutine(crossfadeCoroutine);
 
-        musicSource.Stop();
-        musicSource.clip = null;
+        if (activeMusicSource != null)
+        {
+            activeMusicSource.Stop();
+            activeMusicSource.clip = null;
+            activeMusicSource.volume = 0f;
+        }
+
+        if (inactiveMusicSource != null)
+        {
+            inactiveMusicSource.Stop();
+            inactiveMusicSource.clip = null;
+            inactiveMusicSource.volume = 0f;
+        }
 
         currentClip = null;
         currentSceneName = string.Empty;
@@ -243,18 +363,19 @@ public class MusicManager : MonoBehaviour
 
     public void PauseMusic()
     {
-        if (musicSource == null)
+        if (activeMusicSource == null)
             return;
 
-        musicSource.Pause();
+        activeMusicSource.Pause();
     }
 
     public void ResumeMusic()
     {
-        if (musicSource == null)
+        if (activeMusicSource == null)
             return;
 
-        musicSource.Play();
+        activeMusicSource.Play();
     }
+
 
 }

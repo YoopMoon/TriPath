@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2640100691765103658}
   - component: {fileID: 7480985698128945988}
   m_Layer: 0
-  m_Name: Checkpoint (No Flag)
+  m_Name: WorldFinishFlag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,6 +152,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 833673ad138066e428a99fdf468d6194, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Checkpoint
+  animator: {fileID: 7480985698128945988}
+  finishClip: {fileID: 8300000, guid: f8b83a0c2b6311f43bd272cbcb6c71f4, type: 3}
+  finishVolume: 0.25
+  nextSceneMusicClip: {fileID: 0}
+  musicCrossfadeDuration: 2
+  transitionObject: {fileID: 0}
+  delayBeforeTransition: 2
+  transitionDuration: 1.5
+  nextSceneName: 
 --- !u!95 &7480985698128945988
 Animator:
   serializedVersion: 7
