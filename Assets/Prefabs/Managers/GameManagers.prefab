@@ -250,14 +250,18 @@ MonoBehaviour:
     - CharacterSelectScene
     - HowToPlayScene
     - HowToPlayWorld2
-    musicClip: {fileID: 8300000, guid: c2d8c4953904249538936ba22f3fd37c, type: 3}
+    musicClip: {fileID: 8300000, guid: f5ee21cf8fb714d6492f4bd36526832c, type: 3}
+    volume: 0.2
   worldMusicEntries:
   - worldPrefix: Map1
     musicClip: {fileID: 8300000, guid: 9a6270964bf0f4274aa86614c413dcbe, type: 3}
+    volume: 0.08
   - worldPrefix: Map2
     musicClip: {fileID: 8300000, guid: 8ac84876b2e1647eb9e7e8e20e749d2e, type: 3}
+    volume: 0.08
   - worldPrefix: Map3
     musicClip: {fileID: 8300000, guid: 58c05f69089b94e8fb546633fd1593da, type: 3}
+    volume: 0.08
   defaultVolume: 0.12
   crossfadeDuration: 1.5
 --- !u!1 &7550046271439610597

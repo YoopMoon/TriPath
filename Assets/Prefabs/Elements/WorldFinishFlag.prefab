@@ -153,10 +153,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Checkpoint
   animator: {fileID: 7480985698128945988}
-  finishClip: {fileID: 8300000, guid: f8b83a0c2b6311f43bd272cbcb6c71f4, type: 3}
+  finishClip: {fileID: 8300000, guid: 35fed44690eb1074d88c121b7a3ee3f6, type: 3}
   finishVolume: 0.25
-  nextSceneMusicClip: {fileID: 0}
-  musicCrossfadeDuration: 2
   transitionObject: {fileID: 0}
   delayBeforeTransition: 2
   transitionDuration: 1.5

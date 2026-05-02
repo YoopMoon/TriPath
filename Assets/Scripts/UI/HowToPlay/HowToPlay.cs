@@ -15,13 +15,12 @@ public class HowToPlay : MonoBehaviour
     [SerializeField] private AudioClip clickClip;
     [SerializeField] private float clickVolume = 1f;
 
-
     private bool isLoadingScene;
 
     private void Start()
     {
         if (continueButton != null)
-            continueButton.onClick.AddListener(ContinueToGame);
+            continueButton.onClick.AddListener(ContinueToConfiguredScene);
     }
 
     private void Update()
@@ -35,19 +34,39 @@ public class HowToPlay : MonoBehaviour
             return;
 
         if (Keyboard.current.spaceKey.wasReleasedThisFrame)
-            ContinueToGame();
+            ContinueToConfiguredScene();
     }
 
-    public void ContinueToGame()
+    // Usa la escena configurada desde el inspector.
+    // Sirve para continuar con Space o para botones sin parámetro.
+    public void ContinueToConfiguredScene()
+    {
+        LoadScene(nextLevelSceneName);
+    }
+
+    // Este método es el que debes seleccionar desde el OnClick del botón
+    // si quieres indicar la escena manualmente desde Unity.
+    public void ContinueToScene(string sceneName)
+    {
+        LoadScene(sceneName);
+    }
+
+    private void LoadScene(string sceneName)
     {
         if (isLoadingScene)
             return;
+
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            Debug.LogWarning("[HowToPlay] Scene name is empty.");
+            return;
+        }
 
         isLoadingScene = true;
 
         PlayClickSFX();
 
-        SceneManager.LoadScene(nextLevelSceneName);
+        SceneManager.LoadScene(sceneName);
     }
 
     private void PlayClickSFX()

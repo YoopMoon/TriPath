@@ -291,4 +291,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemCollected
   collectibleType: 0
   collectedClip: {fileID: 8300000, guid: 694b857da8e45b9479003c21cf3d3366, type: 3}
-  collectedVolume: 0.75
+  collectedVolume: 0.5

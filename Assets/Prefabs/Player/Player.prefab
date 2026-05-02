@@ -352,8 +352,7 @@ MonoBehaviour:
   stepClips:
   - {fileID: 8300000, guid: 3a5fb717aa0c9c542bb14ef6a8be2eaa, type: 3}
   - {fileID: 8300000, guid: 9b1c1cbf62c8ec745aabd8d773048f8f, type: 3}
-  stepVolume: 0.75
-  isInmortal: 0
+  stepVolume: 0.25
   playerHealth: {fileID: 7119377418927810174}
 --- !u!114 &7733158684958589704
 MonoBehaviour:

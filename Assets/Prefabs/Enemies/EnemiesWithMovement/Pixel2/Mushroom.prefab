@@ -178,6 +178,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   animator: {fileID: 3701280405547246484}
   spriteRenderer: {fileID: 3145691231866152420}
+  spriteRendererFlipEnabled: 1
+  topDamageCollider: {fileID: 0}
   maxHealth: 1
   moveSpeed: 0.5
   waitDuration: 2
@@ -186,7 +188,6 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 216930507671173728}
   - {fileID: 6541178994769519329}
-  enemyDamageTransform: {fileID: 0}
 --- !u!114 &5837720128255643235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,7 +204,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 3145691231866152420}
   enemyCollider: {fileID: 2935262931144977877}
   destroyParticle: {fileID: 3935960030040619661}
-  bounceForce: 2.5
+  bounceForce: 3
   maxHealth: 2
   destroyDelay: 0.2
   hitAnimationName: Hit
@@ -340,7 +341,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.00017748773, y: -0.08489919}
+  m_Offset: {x: 0.0006775856, y: -0.09667833}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -350,7 +351,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.2589858, y: 0.14006907}
+  m_Size: {x: 0.22798443, y: 0.11651078}
   m_EdgeRadius: 0
 --- !u!114 &8435873191102273621
 MonoBehaviour:

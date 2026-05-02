@@ -14,6 +14,11 @@ public class JumpDamage : MonoBehaviour
     [SerializeField] private float destroyDelay = 0.2f;
     [SerializeField] private string hitAnimationName = "Hit";
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip damageClip;
+    [SerializeField] private float damageVolume = 1f;
+
+
     private int currentHealth;
     private bool isDead;
 
@@ -46,10 +51,27 @@ public class JumpDamage : MonoBehaviour
         if (!collision.gameObject.TryGetComponent(out Rigidbody2D playerRb))
             return;
 
+        if (!IsValidStomp(collision, playerRb))
+            return;
+
         playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 0f);
         playerRb.linearVelocity += Vector2.up * bounceForce;
 
         TakeDamage(1);
+    }
+
+    private bool IsValidStomp(Collision2D collision, Rigidbody2D playerRb)
+    {
+        if (playerRb.linearVelocity.y > 0f)
+            return false;
+
+        foreach (ContactPoint2D contact in collision.contacts)
+        {
+            if (contact.normal.y < -0.5f)
+                return true;
+        }
+
+        return false;
     }
 
     public void TakeDamage(int damageAmount)
@@ -59,6 +81,8 @@ public class JumpDamage : MonoBehaviour
 
         currentHealth -= damageAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        PlayDamageSound();
 
         if (currentHealth > 0)
         {
@@ -106,5 +130,14 @@ public class JumpDamage : MonoBehaviour
             destroyParticle.SetActive(true);
 
         Destroy(gameObject, destroyDelay);
+    }
+
+    private void PlayDamageSound()
+    {
+        if (damageClip == null)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySFX(damageClip, damageVolume);
     }
 }

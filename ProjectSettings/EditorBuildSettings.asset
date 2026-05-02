@@ -36,7 +36,10 @@ EditorBuildSettings:
     path: Assets/Scenes/Map1/Map1_Level5.unity
     guid: 9ada1869453f1524995db16ed585d655
   - enabled: 1
-    path: Assets/Scenes/HowToPlayWorld2.unity
+    path: Assets/Scenes/HowToPlayScene2.unity
     guid: 6a3c16b5343ca7b4b9afc200b31d4929
+  - enabled: 1
+    path: Assets/Scenes/Map2/Map2_Level1.unity
+    guid: 42a5410b9f65bb44f9c7625b3d2d2d54
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

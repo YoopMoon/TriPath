@@ -14,6 +14,10 @@ public class MusicManager : MonoBehaviour
         // Útil si una escena debe tener una pista única.
         public string sceneName;
         public AudioClip musicClip;
+
+        // Volumen específico para esta escena.
+        [Range(0f, 1f)]
+        public float volume = 0.15f;
     }
 
     [System.Serializable]
@@ -27,6 +31,11 @@ public class MusicManager : MonoBehaviour
 
         // Pista común para todas esas escenas.
         public AudioClip musicClip;
+
+        // Volumen específico para este grupo de escenas.
+        // Por ejemplo, puedes poner MenuFlow a 0.08.
+        [Range(0f, 1f)]
+        public float volume = 0.10f;
     }
 
     [System.Serializable]
@@ -34,7 +43,14 @@ public class MusicManager : MonoBehaviour
     {
         // Prefijo del mundo, por ejemplo Map1, Map2, Map3.
         public string worldPrefix;
+
+        // Pista común para los niveles de ese mundo.
         public AudioClip musicClip;
+
+        // Volumen específico para este mundo.
+        // Por ejemplo, puedes poner los mapas a 0.05 si suenan más fuertes.
+        [Range(0f, 1f)]
+        public float volume = 0.08f;
     }
 
     [Header("References")]
@@ -71,6 +87,9 @@ public class MusicManager : MonoBehaviour
     private string currentWorldPrefix = string.Empty;
     private AudioClip currentClip;
 
+    // Volumen objetivo de la pista que está sonando actualmente.
+    private float currentTargetVolume;
+
     private Coroutine crossfadeCoroutine;
 
     private void Awake()
@@ -91,8 +110,10 @@ public class MusicManager : MonoBehaviour
         activeMusicSource = firstMusicSource;
         inactiveMusicSource = secondMusicSource;
 
+        currentTargetVolume = defaultVolume;
+
         if (activeMusicSource != null)
-            activeMusicSource.volume = defaultVolume;
+            activeMusicSource.volume = currentTargetVolume;
 
         if (inactiveMusicSource != null)
             inactiveMusicSource.volume = 0f;
@@ -136,19 +157,12 @@ public class MusicManager : MonoBehaviour
         if (activeMusicSource == null || inactiveMusicSource == null)
             return;
 
-        // Orden de prioridad:
-        // 1. Música específica de escena
-        // 2. Música de grupo de escenas
-        // 3. Música por mundo
-        AudioClip newClip = GetClipForScene(sceneName);
+        MusicSelection selection = GetMusicSelectionForScene(sceneName);
 
-        if (newClip == null)
-            newClip = GetClipForSceneGroup(sceneName);
+        AudioClip newClip = selection.clip;
+        float newVolume = selection.volume;
 
         string newWorldPrefix = GetWorldPrefix(sceneName);
-
-        if (newClip == null)
-            newClip = GetClipForWorld(newWorldPrefix);
 
         // Si no hay música definida para esta escena, paramos con fade out.
         if (newClip == null)
@@ -164,17 +178,105 @@ public class MusicManager : MonoBehaviour
         {
             currentSceneName = sceneName;
             currentWorldPrefix = newWorldPrefix;
+
+            // Si el clip es el mismo pero el volumen configurado ha cambiado,
+            // ajustamos suavemente el volumen al nuevo valor.
+            if (!Mathf.Approximately(currentTargetVolume, newVolume))
+                SetVolume(newVolume);
+
             return;
         }
 
         currentSceneName = sceneName;
         currentWorldPrefix = newWorldPrefix;
         currentClip = newClip;
+        currentTargetVolume = newVolume;
 
-        CrossfadeToClip(newClip);
+        CrossfadeToClip(newClip, newVolume);
     }
 
-    private void CrossfadeToClip(AudioClip newClip)
+    private MusicSelection GetMusicSelectionForScene(string sceneName)
+    {
+        // Orden de prioridad:
+        // 1. Música específica de escena
+        // 2. Música de grupo de escenas
+        // 3. Música por mundo
+
+        MusicSelection sceneSelection = GetSceneMusicSelection(sceneName);
+
+        if (sceneSelection.clip != null)
+            return sceneSelection;
+
+        MusicSelection groupSelection = GetSceneGroupMusicSelection(sceneName);
+
+        if (groupSelection.clip != null)
+            return groupSelection;
+
+        string worldPrefix = GetWorldPrefix(sceneName);
+
+        MusicSelection worldSelection = GetWorldMusicSelection(worldPrefix);
+
+        if (worldSelection.clip != null)
+            return worldSelection;
+
+        return new MusicSelection(null, defaultVolume);
+    }
+
+    private MusicSelection GetSceneMusicSelection(string sceneName)
+    {
+        if (sceneMusicEntries == null)
+            return new MusicSelection(null, defaultVolume);
+
+        foreach (SceneMusicEntry entry in sceneMusicEntries)
+        {
+            if (entry == null)
+                continue;
+
+            if (entry.sceneName == sceneName)
+                return new MusicSelection(entry.musicClip, entry.volume);
+        }
+
+        return new MusicSelection(null, defaultVolume);
+    }
+
+    private MusicSelection GetSceneGroupMusicSelection(string sceneName)
+    {
+        if (sceneGroupMusicEntries == null)
+            return new MusicSelection(null, defaultVolume);
+
+        foreach (SceneGroupMusicEntry entry in sceneGroupMusicEntries)
+        {
+            if (entry == null || entry.sceneNames == null)
+                continue;
+
+            foreach (string groupedSceneName in entry.sceneNames)
+            {
+                if (groupedSceneName == sceneName)
+                    return new MusicSelection(entry.musicClip, entry.volume);
+            }
+        }
+
+        return new MusicSelection(null, defaultVolume);
+    }
+
+    private MusicSelection GetWorldMusicSelection(string worldPrefix)
+    {
+        if (string.IsNullOrEmpty(worldPrefix) || worldMusicEntries == null)
+            return new MusicSelection(null, defaultVolume);
+
+        foreach (WorldMusicEntry entry in worldMusicEntries)
+        {
+            if (entry == null)
+                continue;
+
+            if (entry.worldPrefix == worldPrefix)
+                return new MusicSelection(entry.musicClip, entry.volume);
+        }
+
+        return new MusicSelection(null, defaultVolume);
+    }
+
+    private void CrossfadeToClip(AudioClip newClip, float targetVolume)
     {
         if (newClip == null)
             return;
@@ -182,10 +284,10 @@ public class MusicManager : MonoBehaviour
         if (crossfadeCoroutine != null)
             StopCoroutine(crossfadeCoroutine);
 
-        crossfadeCoroutine = StartCoroutine(CrossfadeCoroutine(newClip));
+        crossfadeCoroutine = StartCoroutine(CrossfadeCoroutine(newClip, targetVolume));
     }
 
-    private IEnumerator CrossfadeCoroutine(AudioClip newClip)
+    private IEnumerator CrossfadeCoroutine(AudioClip newClip, float targetVolume)
     {
         inactiveMusicSource.clip = newClip;
         inactiveMusicSource.volume = 0f;
@@ -202,7 +304,7 @@ public class MusicManager : MonoBehaviour
             float t = timer / crossfadeDuration;
 
             activeMusicSource.volume = Mathf.Lerp(startActiveVolume, 0f, t);
-            inactiveMusicSource.volume = Mathf.Lerp(0f, defaultVolume, t);
+            inactiveMusicSource.volume = Mathf.Lerp(0f, targetVolume, t);
 
             yield return null;
         }
@@ -211,7 +313,7 @@ public class MusicManager : MonoBehaviour
         activeMusicSource.clip = null;
         activeMusicSource.volume = 0f;
 
-        inactiveMusicSource.volume = defaultVolume;
+        inactiveMusicSource.volume = targetVolume;
 
         SwapAudioSources();
 
@@ -223,6 +325,7 @@ public class MusicManager : MonoBehaviour
         currentClip = null;
         currentSceneName = string.Empty;
         currentWorldPrefix = string.Empty;
+        currentTargetVolume = defaultVolume;
 
         if (crossfadeCoroutine != null)
             StopCoroutine(crossfadeCoroutine);
@@ -260,60 +363,6 @@ public class MusicManager : MonoBehaviour
         inactiveMusicSource = temp;
     }
 
-    private AudioClip GetClipForScene(string sceneName)
-    {
-        if (sceneMusicEntries == null)
-            return null;
-
-        foreach (SceneMusicEntry entry in sceneMusicEntries)
-        {
-            if (entry == null)
-                continue;
-
-            if (entry.sceneName == sceneName)
-                return entry.musicClip;
-        }
-
-        return null;
-    }
-
-    private AudioClip GetClipForSceneGroup(string sceneName)
-    {
-        if (sceneGroupMusicEntries == null)
-            return null;
-
-        foreach (SceneGroupMusicEntry entry in sceneGroupMusicEntries)
-        {
-            if (entry == null || entry.sceneNames == null)
-                continue;
-
-            foreach (string groupedSceneName in entry.sceneNames)
-            {
-                if (groupedSceneName == sceneName)
-                    return entry.musicClip;
-            }
-        }
-
-        return null;
-    }
-
-    private AudioClip GetClipForWorld(string worldPrefix)
-    {
-        if (string.IsNullOrEmpty(worldPrefix) || worldMusicEntries == null)
-            return null;
-
-        foreach (WorldMusicEntry entry in worldMusicEntries)
-        {
-            if (entry == null)
-                continue;
-
-            if (entry.worldPrefix == worldPrefix)
-                return entry.musicClip;
-        }
-
-        return null;
-    }
-
     private string GetWorldPrefix(string sceneName)
     {
         if (string.IsNullOrEmpty(sceneName))
@@ -331,10 +380,10 @@ public class MusicManager : MonoBehaviour
 
     public void SetVolume(float volume)
     {
-        defaultVolume = Mathf.Clamp01(volume);
+        currentTargetVolume = Mathf.Clamp01(volume);
 
         if (activeMusicSource != null)
-            activeMusicSource.volume = defaultVolume;
+            activeMusicSource.volume = currentTargetVolume;
     }
 
     public void StopMusic()
@@ -359,6 +408,7 @@ public class MusicManager : MonoBehaviour
         currentClip = null;
         currentSceneName = string.Empty;
         currentWorldPrefix = string.Empty;
+        currentTargetVolume = defaultVolume;
     }
 
     public void PauseMusic()
@@ -377,5 +427,15 @@ public class MusicManager : MonoBehaviour
         activeMusicSource.Play();
     }
 
+    private readonly struct MusicSelection
+    {
+        public readonly AudioClip clip;
+        public readonly float volume;
 
+        public MusicSelection(AudioClip clip, float volume)
+        {
+            this.clip = clip;
+            this.volume = Mathf.Clamp01(volume);
+        }
+    }
 }
