@@ -7,6 +7,16 @@ public class EnvironmentHazard : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D trigger)
     {
+        TryDamagePlayer(trigger);
+    }
+
+    private void OnTriggerStay2D(Collider2D trigger)
+    {
+        TryDamagePlayer(trigger);
+    }
+
+    private void TryDamagePlayer(Collider2D trigger)
+    {
         if (!trigger.transform.CompareTag("Player"))
             return;
 

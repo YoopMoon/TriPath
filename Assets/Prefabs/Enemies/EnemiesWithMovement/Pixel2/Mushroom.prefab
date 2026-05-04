@@ -84,7 +84,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -6367560908665664636, guid: a6465882e447a7346b1d80709f6094be, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -152,7 +152,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0010020137, y: 0.017637}
+  m_Offset: {x: 0.00022134185, y: 0.017637}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -162,7 +162,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.1611197, y: 0.04699394}
+  m_Size: {x: 0.24063426, y: 0.04699394}
   m_EdgeRadius: 0
 --- !u!114 &4331337918586621121
 MonoBehaviour:
@@ -203,11 +203,17 @@ MonoBehaviour:
   animator: {fileID: 3701280405547246484}
   spriteRenderer: {fileID: 3145691231866152420}
   enemyCollider: {fileID: 2935262931144977877}
-  destroyParticle: {fileID: 3935960030040619661}
   bounceForce: 3
-  maxHealth: 2
-  destroyDelay: 0.2
+  maxHealth: 1
   hitAnimationName: Hit
+  deathJumpForce: 1.6
+  deathGravity: 14
+  deathDuration: 0.9
+  deathRotationSpeed: 180
+  rotateOnDeath: 1
+  disableAnimatorOnDeath: 1
+  damageClip: {fileID: 8300000, guid: 3ee0ac984051a344cae79691e48f934c, type: 3}
+  damageVolume: 0.35
 --- !u!1 &2155785655716406404
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,7 +372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamageObject
   damageAmount: 1
-  knockbackForce: {x: 0, y: 2.5}
+  knockbackForce: {x: 2.5, y: 2.5}
 --- !u!1 &3314979696403748076
 GameObject:
   m_ObjectHideFlags: 0

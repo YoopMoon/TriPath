@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class JumpDamage : MonoBehaviour
@@ -6,18 +7,23 @@ public class JumpDamage : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Collider2D enemyCollider;
-    [SerializeField] private GameObject destroyParticle;
 
     [Header("Enemy Settings")]
     [SerializeField] private float bounceForce = 2.5f;
     [SerializeField] private int maxHealth = 2;
-    [SerializeField] private float destroyDelay = 0.2f;
     [SerializeField] private string hitAnimationName = "Hit";
+
+    [Header("Death Animation")]
+    [SerializeField] private float deathJumpForce = 1.6f;
+    [SerializeField] private float deathGravity = 14f;
+    [SerializeField] private float deathDuration = 0.9f;
+    [SerializeField] private float deathRotationSpeed = 180f;
+    [SerializeField] private bool rotateOnDeath = true;
+    [SerializeField] private bool disableAnimatorOnDeath = true;
 
     [Header("Audio")]
     [SerializeField] private AudioClip damageClip;
     [SerializeField] private float damageVolume = 1f;
-
 
     private int currentHealth;
     private bool isDead;
@@ -118,18 +124,73 @@ public class JumpDamage : MonoBehaviour
 
     private void Die()
     {
+        if (isDead)
+            return;
+
         isDead = true;
 
-        if (enemyCollider != null)
-            enemyCollider.enabled = false;
+        DisableEnemyInteraction();
 
-        if (spriteRenderer != null)
-            spriteRenderer.enabled = false;
+        if (animator != null && disableAnimatorOnDeath)
+            animator.enabled = false;
 
-        if (destroyParticle != null)
-            destroyParticle.SetActive(true);
+        StartCoroutine(DeathFallCoroutine());
+    }
 
-        Destroy(gameObject, destroyDelay);
+    private void DisableEnemyInteraction()
+    {
+        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+
+        foreach (Collider2D collider in colliders)
+            collider.enabled = false;
+
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.simulated = false;
+        }
+
+        DamagePlayerOnCollision damageOnCollision = GetComponent<DamagePlayerOnCollision>();
+
+        if (damageOnCollision != null)
+            damageOnCollision.enabled = false;
+
+        HeadEnemy headEnemy = GetComponent<HeadEnemy>();
+
+        if (headEnemy != null)
+            headEnemy.enabled = false;
+    }
+
+    private IEnumerator DeathFallCoroutine()
+    {
+        if (spriteRenderer == null)
+        {
+            Destroy(gameObject);
+            yield break;
+        }
+
+        Transform visualTransform = spriteRenderer.transform;
+
+        float verticalVelocity = deathJumpForce;
+        float timer = 0f;
+
+        while (timer < deathDuration)
+        {
+            timer += Time.deltaTime;
+
+            verticalVelocity -= deathGravity * Time.deltaTime;
+            visualTransform.position += Vector3.up * verticalVelocity * Time.deltaTime;
+
+            if (rotateOnDeath)
+                visualTransform.Rotate(0f, 0f, deathRotationSpeed * Time.deltaTime);
+
+            yield return null;
+        }
+
+        Destroy(gameObject);
     }
 
     private void PlayDamageSound()

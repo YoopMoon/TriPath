@@ -51,6 +51,7 @@ public class SceneExit : MonoBehaviour
         if (exitType == SceneExitType.Forward)
             HandleForwardExit(currentLevelID);
 
+        SavePlayerHealthBeforeSceneChange();
         PrepareSceneTransitionData();
 
         if (transitionPanel != null)
@@ -103,5 +104,13 @@ public class SceneExit : MonoBehaviour
             SceneManager.GetActiveScene().name,
             targetSpawnId
         );
+    }
+
+    private void SavePlayerHealthBeforeSceneChange()
+    {
+        PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
+
+        if (playerHealth != null)
+            playerHealth.SaveCurrentHealth();
     }
 }

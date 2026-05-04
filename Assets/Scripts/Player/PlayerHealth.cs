@@ -16,6 +16,15 @@ public class PlayerHealth : MonoBehaviour
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Animator animator;
+
+    [Header("Death Animation")]
+    [SerializeField] private float deathJumpForce = 1.6f;
+    [SerializeField] private float deathGravity = 14f;
+    [SerializeField] private float deathDelayBeforeGameOver = 2f;
+    [SerializeField] private float deathRotationSpeed = 180f;
+    [SerializeField] private bool rotateOnDeath = true;
+    [SerializeField] private bool disableAnimatorOnDeath = true;
 
     [Header("Audio")]
     [SerializeField] private AudioClip damageClip;
@@ -33,6 +42,8 @@ public class PlayerHealth : MonoBehaviour
     public event Action OnDamageTaken;
     public event Action OnHealed;
 
+    private bool isDead;
+
     private void Awake()
     {
         if (rb == null)
@@ -40,21 +51,30 @@ public class PlayerHealth : MonoBehaviour
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (animator == null)
+            animator = GetComponent<Animator>();
     }
 
     private void Start()
+    {
+        InitializeHealth();
+    }
+
+    private void InitializeHealth()
     {
         if (SceneTransitionManager.instance != null && SceneTransitionManager.instance.HasSavedHealth())
         {
             currentHealth = SceneTransitionManager.instance.GetSavedHealth();
             currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
+
+            Debug.Log($"[PlayerHealth] Vida restaurada: {currentHealth}/{MaxHealth}");
         }
         else
         {
             currentHealth = MaxHealth;
 
-            if (SceneTransitionManager.instance != null)
-                SceneTransitionManager.instance.SetPlayerHealth(currentHealth);
+            Debug.Log($"[PlayerHealth] Vida inicializada al máximo: {currentHealth}/{MaxHealth}");
         }
 
         OnHealthChanged?.Invoke();
@@ -67,6 +87,9 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int amount, Vector2 knockbackForce)
     {
+        if (isDead)
+            return;
+
         if (isInvulnerable)
             return;
 
@@ -75,17 +98,11 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
 
-        if (damageClip == null)
-            return;
-
-        if (SFXManager.Instance != null)
+        if (damageClip != null && SFXManager.Instance != null)
             SFXManager.Instance.PlaySFX(damageClip, damageVolume);
 
         if (LevelMetrics.Instance != null)
             LevelMetrics.Instance.RegisterDamageTaken(amount);
-
-        if (SceneTransitionManager.instance != null)
-            SceneTransitionManager.instance.SetPlayerHealth(currentHealth);
 
         ApplyKnockback(knockbackForce);
 
@@ -94,9 +111,6 @@ public class PlayerHealth : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            if (LevelMetrics.Instance != null)
-                LevelMetrics.Instance.RegisterDeath();
-
             Die();
             return;
         }
@@ -106,6 +120,9 @@ public class PlayerHealth : MonoBehaviour
 
     public void Heal(int amount)
     {
+        if (isDead)
+            return;
+
         int previousHealth = currentHealth;
 
         currentHealth += amount;
@@ -114,15 +131,8 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth <= previousHealth)
             return;
 
-        if (SceneTransitionManager.instance != null)
-            SceneTransitionManager.instance.SetPlayerHealth(currentHealth);
-
-        if (healClip == null)
-            return;
-
-        if (SFXManager.Instance != null)
+        if (healClip != null && SFXManager.Instance != null)
             SFXManager.Instance.PlaySFX(healClip, healVolume);
-
 
         OnHealthChanged?.Invoke();
         OnHealed?.Invoke();
@@ -160,11 +170,72 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
+        if (isDead)
+            return;
+
+        isDead = true;
+
         if (LevelMetrics.Instance != null)
             LevelMetrics.Instance.RegisterDeath();
 
-        DisablePlayerOnDeath();
+        StopAllCoroutines();
 
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = true;
+
+        DisablePlayerInteractionOnDeath();
+
+        if (animator != null && disableAnimatorOnDeath)
+            animator.enabled = false;
+
+        StartCoroutine(DeathFallCoroutine());
+    }
+
+    private void DisablePlayerInteractionOnDeath()
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.simulated = false;
+        }
+
+        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+
+        foreach (Collider2D collider in colliders)
+            collider.enabled = false;
+
+        PlayerController playerController = GetComponent<PlayerController>();
+
+        if (playerController != null)
+            playerController.enabled = false;
+    }
+
+    private IEnumerator DeathFallCoroutine()
+    {
+        Transform visualTransform = spriteRenderer != null ? spriteRenderer.transform : transform;
+
+        float verticalVelocity = deathJumpForce;
+        float timer = 0f;
+
+        while (timer < deathDelayBeforeGameOver)
+        {
+            timer += Time.deltaTime;
+
+            verticalVelocity -= deathGravity * Time.deltaTime;
+            visualTransform.position += Vector3.up * verticalVelocity * Time.deltaTime;
+
+            if (rotateOnDeath)
+                visualTransform.Rotate(0f, 0f, deathRotationSpeed * Time.deltaTime);
+
+            yield return null;
+        }
+
+        ShowGameOver();
+    }
+
+    private void ShowGameOver()
+    {
         if (GameOverManager.Instance != null)
         {
             GameOverManager.Instance.HandlePlayerDeath();
@@ -177,30 +248,32 @@ public class PlayerHealth : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void DisablePlayerOnDeath()
+    public void SaveCurrentHealth()
     {
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-            rb.simulated = false;
-        }
+        if (SceneTransitionManager.instance == null)
+            return;
 
-        Collider2D playerCollider = GetComponent<Collider2D>();
-        if (playerCollider != null)
-            playerCollider.enabled = false;
+        SceneTransitionManager.instance.SetPlayerHealth(currentHealth);
 
-        PlayerController playerController = GetComponent<PlayerController>();
-        if (playerController != null)
-            playerController.enabled = false;
-
-        if (spriteRenderer != null)
-            spriteRenderer.enabled = false;
+        Debug.Log($"[PlayerHealth] Vida guardada al salir de escena: {currentHealth}/{MaxHealth}");
     }
 
     public void SetMaxHearts(int hearts)
     {
-        maxHearts = hearts;
-        currentHealth = MaxHealth;
+        maxHearts = Mathf.Max(1, hearts);
+
+        if (SceneTransitionManager.instance != null && SceneTransitionManager.instance.HasSavedHealth())
+        {
+            currentHealth = SceneTransitionManager.instance.GetSavedHealth();
+            currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
+        }
+        else
+        {
+            currentHealth = MaxHealth;
+        }
+
         OnHealthChanged?.Invoke();
+
+        Debug.Log($"[PlayerHealth] SetMaxHearts -> Vida actual: {currentHealth}/{MaxHealth}");
     }
 }

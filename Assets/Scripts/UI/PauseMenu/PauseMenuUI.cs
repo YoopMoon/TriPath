@@ -7,6 +7,7 @@ public class PauseMenuUI : MonoBehaviour
     [SerializeField] private GameObject pauseButton;
     [SerializeField] private GameObject pauseScreen;
     [SerializeField] private GameObject menuPause;
+    [SerializeField] private GameObject menuPauseShadow;
 
     [Header("Audio")]
     [SerializeField] private AudioClip clickClip;
@@ -23,6 +24,9 @@ public class PauseMenuUI : MonoBehaviour
         if (menuPause != null)
             menuPause.SetActive(true);
 
+        if (menuPauseShadow != null)
+            menuPauseShadow.SetActive(true);
+
         Time.timeScale = 0f;
     }
 
@@ -36,6 +40,16 @@ public class PauseMenuUI : MonoBehaviour
 
         if (menuPause != null)
             menuPause.SetActive(false);
+
+        if (menuPauseShadow != null)
+        {
+            Debug.Log("[PauseMenuUI] Desactivando shadow: " + menuPauseShadow.name);
+            menuPauseShadow.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning("[PauseMenuUI] menuPauseShadow no está asignado.");
+        }
 
         Time.timeScale = 1f;
     }
