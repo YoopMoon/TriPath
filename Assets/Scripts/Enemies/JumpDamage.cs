@@ -135,6 +135,7 @@ public class JumpDamage : MonoBehaviour
             animator.enabled = false;
 
         StartCoroutine(DeathFallCoroutine());
+
     }
 
     private void DisableEnemyInteraction()
