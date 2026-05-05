@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8215195691925024693}
   - component: {fileID: 1051962245776371155}
   m_Layer: 0
-  m_Name: Exit_Right
+  m_Name: ExitForward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,3 +93,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneTransition
   nextSceneName: 
   targetSpawnId: 
+  exitType: 1
+  transitionPanel: {fileID: 0}
+  transitionDelay: 1.3

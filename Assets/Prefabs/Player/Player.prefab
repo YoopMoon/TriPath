@@ -397,8 +397,15 @@ MonoBehaviour:
   blinkInterval: 0.1
   rb: {fileID: 6324891557348267882}
   spriteRenderer: {fileID: 1337075344054466720}
+  animator: {fileID: 0}
+  deathJumpForce: 1.6
+  deathGravity: 14
+  deathDelayBeforeGameOver: 2
+  deathRotationSpeed: 180
+  rotateOnDeath: 1
+  disableAnimatorOnDeath: 1
   damageClip: {fileID: 8300000, guid: ceef3f960940b534fa4f0ed366d2085f, type: 3}
-  damageVolume: 0.75
+  damageVolume: 1
   healClip: {fileID: 8300000, guid: 3484f990080c00e4e867462de60df85e, type: 3}
   healVolume: 0.2
   hitReceived: 0

@@ -20,7 +20,7 @@ public class FloorChecker : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Floor"))
+        if (!collision.CompareTag("Floor") && !collision.CompareTag("FloorOneWayPlatform"))
             return;
 
         floorContacts++;
@@ -30,7 +30,7 @@ public class FloorChecker : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Floor"))
+        if (!collision.CompareTag("Floor") && !collision.CompareTag("FloorOneWayPlatform"))
             return;
 
         floorContacts--;

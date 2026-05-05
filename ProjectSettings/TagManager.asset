@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Coin
   - Floor
+  - FloorOneWayPlatform
   layers:
   - Default
   - TransparentFX

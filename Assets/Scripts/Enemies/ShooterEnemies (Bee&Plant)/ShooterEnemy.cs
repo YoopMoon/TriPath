@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlantEnemy : MonoBehaviour
+public class ShooterEnemy : MonoBehaviour
 {
     [Header("Attack Settings")]
     [SerializeField] private float waitTimeToAttack = 3f;

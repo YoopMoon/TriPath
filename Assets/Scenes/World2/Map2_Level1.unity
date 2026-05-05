@@ -925,7 +925,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3282067095562757480, guid: 5380840c3ad0ae2479ebd635e366e1cd, type: 3}
       propertyPath: m_Name
-      value: Exit_Left
+      value: ExitBackward
       objectReference: {fileID: 0}
     - target: {fileID: 3282067095562757480, guid: 5380840c3ad0ae2479ebd635e366e1cd, type: 3}
       propertyPath: m_IsActive
@@ -12001,7 +12001,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8898517429994468943, guid: 6e28ebbe10909374f93b461e2d1514a3, type: 3}
       propertyPath: m_Name
-      value: Exit_Right
+      value: ExitForward
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -47,5 +47,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/World2/Map2_Level3.unity
     guid: 62aed2b6f553e0c4394767d92ef91d0a
+  - enabled: 1
+    path: Assets/Scenes/World2/Map2_Level4.unity
+    guid: 8eb14fa5ad00eec41a04b2567edb1c19
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

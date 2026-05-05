@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3401300393724839748}
   - component: {fileID: 3372771785754942455}
   m_Layer: 0
-  m_Name: Exit_Left
+  m_Name: ExitBackward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,3 +95,4 @@ MonoBehaviour:
   targetSpawnId: 
   exitType: 0
   transitionPanel: {fileID: 0}
+  transitionDelay: 1.3
