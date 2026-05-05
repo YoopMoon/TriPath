@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public class EnemyPatrolMovement : MonoBehaviour
+public class FlyingEnemyPatrolMovement : MonoBehaviour
 {
     public enum MovementMode
     {
@@ -22,8 +23,21 @@ public class EnemyPatrolMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 0.5f;
     [SerializeField] private float waitDuration = 2f;
     [SerializeField] private float arrivalThreshold = 0.05f;
-    [SerializeField] private MovementMode movementMode = MovementMode.Horizontal;
+    [SerializeField] private MovementMode movementMode = MovementMode.Free;
     [SerializeField] private Transform[] patrolPoints;
+
+    [Header("Idle Sequence Points")]
+    [SerializeField] private int[] idleSequencePointIndexes;
+
+    [Header("Animator Parameters")]
+    [SerializeField] private string idleParameterName = "Idle";
+    [SerializeField] private string foldWingsTriggerName = "FoldWings";
+    [SerializeField] private string unfoldWingsTriggerName = "UnfoldWings";
+
+    [Header("Animator State Names")]
+    [SerializeField] private string foldWingsStateName = "CeilingIn";
+    [SerializeField] private string unfoldWingsStateName = "CeilingOut";
+    [SerializeField] private float animationStateFallbackTimeout = 1.5f;
 
     [Header("Audio")]
     [SerializeField] private bool useMovementLoopSFX;
@@ -41,7 +55,12 @@ public class EnemyPatrolMovement : MonoBehaviour
     private float initialColliderOffsetX;
 
     private bool hasIdleParameter;
+    private bool hasFoldWingsTrigger;
+    private bool hasUnfoldWingsTrigger;
+
     private bool isDead;
+    private bool isWaitingAtPoint;
+    private bool isPlayingIdleSequence;
 
     public int MaxHealth => maxHealth;
     public int CurrentHealth => currentHealth;
@@ -63,11 +82,10 @@ public class EnemyPatrolMovement : MonoBehaviour
 
     private void Update()
     {
-        if (isDead || patrolPoints == null || patrolPoints.Length == 0)
+        if (isDead || isPlayingIdleSequence || patrolPoints == null || patrolPoints.Length == 0)
             return;
 
         MoveTowardsCurrentPoint();
-        UpdateAnimationState();
     }
 
     private void CacheAnimatorParameters()
@@ -75,7 +93,9 @@ public class EnemyPatrolMovement : MonoBehaviour
         if (animator == null)
             return;
 
-        hasIdleParameter = HasBoolParameter("Idle");
+        hasIdleParameter = HasBoolParameter(idleParameterName);
+        hasFoldWingsTrigger = HasTriggerParameter(foldWingsTriggerName);
+        hasUnfoldWingsTrigger = HasTriggerParameter(unfoldWingsTriggerName);
     }
 
     private void CacheTopDamageCollider()
@@ -117,10 +137,12 @@ public class EnemyPatrolMovement : MonoBehaviour
         Vector2 currentPosition = transform.position;
         Vector2 targetPosition = GetFilteredTargetPosition(targetPoint.position);
 
-        float distanceToTarget = Vector2.Distance(currentPosition, targetPosition);
+        float distanceToTarget = Vector2.Distance(transform.position, targetPosition);
 
         if (distanceToTarget > arrivalThreshold)
         {
+            isWaitingAtPoint = false;
+
             transform.position = Vector2.MoveTowards(
                 currentPosition,
                 targetPosition,
@@ -131,6 +153,14 @@ public class EnemyPatrolMovement : MonoBehaviour
             return;
         }
 
+        isWaitingAtPoint = true;
+
+        if (ShouldPlayIdleSequenceAtCurrentPoint())
+        {
+            StartCoroutine(IdleSequenceCoroutine());
+            return;
+        }
+
         if (waitTimer > 0f)
         {
             waitTimer -= Time.deltaTime;
@@ -138,6 +168,128 @@ public class EnemyPatrolMovement : MonoBehaviour
         }
 
         GoToNextPatrolPoint();
+    }
+
+    private bool ShouldPlayIdleSequenceAtCurrentPoint()
+    {
+        if (idleSequencePointIndexes == null || idleSequencePointIndexes.Length == 0)
+            return false;
+
+        if (isPlayingIdleSequence)
+            return false;
+
+        for (int i = 0; i < idleSequencePointIndexes.Length; i++)
+        {
+            if (idleSequencePointIndexes[i] == currentPointIndex)
+                return true;
+        }
+
+        return false;
+    }
+
+    private IEnumerator IdleSequenceCoroutine()
+    {
+        isPlayingIdleSequence = true;
+        isWaitingAtPoint = true;
+
+        SetIdleAnimation(false);
+
+        if (animator != null && hasFoldWingsTrigger)
+        {
+            animator.ResetTrigger(unfoldWingsTriggerName);
+            animator.SetTrigger(foldWingsTriggerName);
+
+            yield return WaitForAnimatorStateToFinish(
+                foldWingsStateName,
+                animationStateFallbackTimeout
+            );
+        }
+
+        if (isDead)
+            yield break;
+
+        SetIdleAnimation(true);
+
+        if (waitDuration > 0f)
+            yield return new WaitForSeconds(waitDuration);
+
+        if (isDead)
+            yield break;
+
+        SetIdleAnimation(false);
+
+        if (animator != null && hasUnfoldWingsTrigger)
+        {
+            animator.ResetTrigger(foldWingsTriggerName);
+            animator.SetTrigger(unfoldWingsTriggerName);
+
+            yield return WaitForAnimatorStateToFinish(
+                unfoldWingsStateName,
+                animationStateFallbackTimeout
+            );
+        }
+
+        if (isDead)
+            yield break;
+
+        GoToNextPatrolPoint();
+
+        isWaitingAtPoint = false;
+        isPlayingIdleSequence = false;
+    }
+
+    private IEnumerator WaitForAnimatorStateToFinish(string stateName, float timeout)
+    {
+        if (animator == null || string.IsNullOrWhiteSpace(stateName))
+            yield break;
+
+        bool hasEnteredState = false;
+        float timer = 0f;
+
+        while (!isDead && timer < timeout)
+        {
+            AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
+            AnimatorStateInfo nextState = animator.GetNextAnimatorStateInfo(0);
+
+            bool currentMatches = AnimatorStateMatches(currentState, stateName);
+            bool nextMatches = animator.IsInTransition(0) && AnimatorStateMatches(nextState, stateName);
+
+            if (currentMatches || nextMatches)
+            {
+                hasEnteredState = true;
+                break;
+            }
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (!hasEnteredState)
+            yield break;
+
+        timer = 0f;
+
+        while (!isDead && timer < timeout)
+        {
+            AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
+            bool isInExpectedState = AnimatorStateMatches(currentState, stateName);
+            bool isTransitioning = animator.IsInTransition(0);
+
+            if (!isInExpectedState && !isTransitioning)
+                yield break;
+
+            if (isInExpectedState && currentState.normalizedTime >= 1f && !isTransitioning)
+                yield break;
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private bool AnimatorStateMatches(AnimatorStateInfo stateInfo, string stateName)
+    {
+        return stateInfo.IsName(stateName) ||
+               stateInfo.shortNameHash == Animator.StringToHash(stateName);
     }
 
     private void GoToNextPatrolPoint()
@@ -211,16 +363,12 @@ public class EnemyPatrolMovement : MonoBehaviour
         }
     }
 
-    private void UpdateAnimationState()
+    private void SetIdleAnimation(bool isIdle)
     {
         if (animator == null || !hasIdleParameter)
             return;
 
-        Vector2 targetPosition = GetFilteredTargetPosition(patrolPoints[currentPointIndex].position);
-        float distanceToTarget = Vector2.Distance(transform.position, targetPosition);
-
-        bool isIdle = distanceToTarget <= arrivalThreshold && waitTimer > 0f;
-        animator.SetBool("Idle", isIdle);
+        animator.SetBool(idleParameterName, isIdle);
     }
 
     private bool HasBoolParameter(string parameterName)
@@ -232,6 +380,23 @@ public class EnemyPatrolMovement : MonoBehaviour
         {
             if (parameter.name == parameterName &&
                 parameter.type == AnimatorControllerParameterType.Bool)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool HasTriggerParameter(string parameterName)
+    {
+        if (animator == null)
+            return false;
+
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        {
+            if (parameter.name == parameterName &&
+                parameter.type == AnimatorControllerParameterType.Trigger)
             {
                 return true;
             }
@@ -271,9 +436,8 @@ public class EnemyPatrolMovement : MonoBehaviour
     private void OnDisable()
     {
         StopMovementLoopSFX();
-
-        if (animator != null && hasIdleParameter)
-            animator.SetBool("Idle", false);
+        SetIdleAnimation(false);
+        isPlayingIdleSequence = false;
     }
 
     public void SetMaxHealth(int newMaxHealth, bool restoreCurrentHealth = true)
@@ -310,9 +474,8 @@ public class EnemyPatrolMovement : MonoBehaviour
 
         isDead = true;
         StopMovementLoopSFX();
-
-        if (animator != null && hasIdleParameter)
-            animator.SetBool("Idle", false);
+        SetIdleAnimation(false);
+        isPlayingIdleSequence = false;
 
         Destroy(gameObject);
     }
@@ -322,7 +485,7 @@ public class EnemyPatrolMovement : MonoBehaviour
         if (patrolPoints == null || patrolPoints.Length == 0)
             return;
 
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.cyan;
 
         for (int i = 0; i < patrolPoints.Length; i++)
         {

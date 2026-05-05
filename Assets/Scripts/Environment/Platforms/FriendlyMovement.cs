@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FriendlyMovement : MonoBehaviour
@@ -24,12 +25,14 @@ public class FriendlyMovement : MonoBehaviour
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private float detachVerticalVelocity = 0.1f;
 
+    private static readonly Dictionary<Transform, Transform> originalParentsByPassenger = new();
+    private static readonly Dictionary<Transform, FriendlyMovement> currentPlatformByPassenger = new();
+
     private int currentPointIndex;
     private float waitTimer;
     private bool isWaiting;
 
     private Transform playerOnPlatform;
-    private Transform playerOriginalParent;
     private Rigidbody2D playerRb;
 
     private bool isQuittingOrDisabling;
@@ -162,14 +165,26 @@ public class FriendlyMovement : MonoBehaviour
         if (!collision.gameObject.TryGetComponent(out Rigidbody2D detectedRb))
             return;
 
-        if (playerOnPlatform == collision.transform)
+        Transform passenger = collision.transform;
+
+        if (playerOnPlatform == passenger)
             return;
 
-        playerOnPlatform = collision.transform;
-        playerOriginalParent = playerOnPlatform.parent;
+        if (currentPlatformByPassenger.TryGetValue(passenger, out FriendlyMovement previousPlatform))
+        {
+            if (previousPlatform != null && previousPlatform != this)
+                previousPlatform.ForceReleasePassenger(passenger);
+        }
+
+        if (!originalParentsByPassenger.ContainsKey(passenger))
+            originalParentsByPassenger.Add(passenger, passenger.parent);
+
+        playerOnPlatform = passenger;
         playerRb = detectedRb;
 
-        playerOnPlatform.SetParent(transform, true);
+        currentPlatformByPassenger[passenger] = this;
+
+        passenger.SetParent(transform, true);
     }
 
     private void TryDetachPlayer(Collision2D collision)
@@ -183,16 +198,38 @@ public class FriendlyMovement : MonoBehaviour
         DetachPlayer();
     }
 
+    private void ForceReleasePassenger(Transform passenger)
+    {
+        if (playerOnPlatform != passenger)
+            return;
+
+        playerOnPlatform = null;
+        playerRb = null;
+    }
+
     private void DetachPlayer()
     {
         if (playerOnPlatform == null)
             return;
 
+        Transform passenger = playerOnPlatform;
+
         if (!isQuittingOrDisabling)
-            playerOnPlatform.SetParent(playerOriginalParent, true);
+        {
+            if (originalParentsByPassenger.TryGetValue(passenger, out Transform originalParent))
+                passenger.SetParent(originalParent, true);
+            else
+                passenger.SetParent(null, true);
+        }
+
+        if (currentPlatformByPassenger.TryGetValue(passenger, out FriendlyMovement currentPlatform) &&
+            currentPlatform == this)
+        {
+            currentPlatformByPassenger.Remove(passenger);
+            originalParentsByPassenger.Remove(passenger);
+        }
 
         playerOnPlatform = null;
-        playerOriginalParent = null;
         playerRb = null;
     }
 
@@ -244,8 +281,10 @@ public class FriendlyMovement : MonoBehaviour
     {
         isQuittingOrDisabling = true;
 
+        if (playerOnPlatform != null)
+            ForceCleanupPassenger(playerOnPlatform);
+
         playerOnPlatform = null;
-        playerOriginalParent = null;
         playerRb = null;
     }
 
@@ -253,9 +292,24 @@ public class FriendlyMovement : MonoBehaviour
     {
         isQuittingOrDisabling = true;
 
+        if (playerOnPlatform != null)
+            ForceCleanupPassenger(playerOnPlatform);
+
         playerOnPlatform = null;
-        playerOriginalParent = null;
         playerRb = null;
+    }
+
+    private void ForceCleanupPassenger(Transform passenger)
+    {
+        if (passenger == null)
+            return;
+
+        if (currentPlatformByPassenger.TryGetValue(passenger, out FriendlyMovement currentPlatform) &&
+            currentPlatform == this)
+        {
+            currentPlatformByPassenger.Remove(passenger);
+            originalParentsByPassenger.Remove(passenger);
+        }
     }
 
     private void OnDrawGizmosSelected()
@@ -279,6 +333,4 @@ public class FriendlyMovement : MonoBehaviour
                 Gizmos.DrawLine(pointPosition, nextPoint.position);
         }
     }
-
-
 }
