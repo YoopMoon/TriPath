@@ -309,7 +309,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1872899476610884584, guid: 51832e5bfdb78924984fe30d8a73bbb1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.119
+      value: 0.11900001
       objectReference: {fileID: 0}
     - target: {fileID: 1872899476610884584, guid: 51832e5bfdb78924984fe30d8a73bbb1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -425,11 +425,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b30be4adca5972c498cbceed746328a5, type: 3}
---- !u!95 &277196042 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7480985698128945988, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
-  m_PrefabInstance: {fileID: 1751248727}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &308034837
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11877,18 +11872,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2640100691765103658, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
-      propertyPath: animator
-      value: 
-      objectReference: {fileID: 277196042}
-    - target: {fileID: 2640100691765103658, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
-      propertyPath: finishClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 35fed44690eb1074d88c121b7a3ee3f6, type: 3}
-    - target: {fileID: 2640100691765103658, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
-      propertyPath: finishVolume
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 2640100691765103658, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
       propertyPath: nextSceneName
       value: HowToPlayScene2
       objectReference: {fileID: 0}
@@ -11939,10 +11922,6 @@ PrefabInstance:
     - target: {fileID: 5874935862247989875, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
       propertyPath: m_Name
       value: WorldFinishFlag
-      objectReference: {fileID: 0}
-    - target: {fileID: 8384401039720724880, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

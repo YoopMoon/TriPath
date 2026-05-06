@@ -48,8 +48,22 @@ public class EnemyPatrolMovement : MonoBehaviour
 
     private void Awake()
     {
-        CacheAnimatorParameters();
-        CacheTopDamageCollider();
+        if (animator != null)
+            hasIdleParameter = HasBoolParameter("Idle");
+
+        if (topDamageCollider != null)
+        {
+            topBoxCollider = topDamageCollider as BoxCollider2D;
+            topCapsuleCollider = topDamageCollider as CapsuleCollider2D;
+            topCircleCollider = topDamageCollider as CircleCollider2D;
+
+            if (topBoxCollider != null)
+                initialColliderOffsetX = Mathf.Abs(topBoxCollider.offset.x);
+            else if (topCapsuleCollider != null)
+                initialColliderOffsetX = Mathf.Abs(topCapsuleCollider.offset.x);
+            else if (topCircleCollider != null)
+                initialColliderOffsetX = Mathf.Abs(topCircleCollider.offset.x);
+        }
 
         ApplyDifficultySettings();
         currentHealth = maxHealth;
@@ -68,31 +82,6 @@ public class EnemyPatrolMovement : MonoBehaviour
 
         MoveTowardsCurrentPoint();
         UpdateAnimationState();
-    }
-
-    private void CacheAnimatorParameters()
-    {
-        if (animator == null)
-            return;
-
-        hasIdleParameter = HasBoolParameter("Idle");
-    }
-
-    private void CacheTopDamageCollider()
-    {
-        if (topDamageCollider == null)
-            return;
-
-        topBoxCollider = topDamageCollider as BoxCollider2D;
-        topCapsuleCollider = topDamageCollider as CapsuleCollider2D;
-        topCircleCollider = topDamageCollider as CircleCollider2D;
-
-        if (topBoxCollider != null)
-            initialColliderOffsetX = Mathf.Abs(topBoxCollider.offset.x);
-        else if (topCapsuleCollider != null)
-            initialColliderOffsetX = Mathf.Abs(topCapsuleCollider.offset.x);
-        else if (topCircleCollider != null)
-            initialColliderOffsetX = Mathf.Abs(topCircleCollider.offset.x);
     }
 
     private void ApplyDifficultySettings()
@@ -117,16 +106,16 @@ public class EnemyPatrolMovement : MonoBehaviour
         Vector2 currentPosition = transform.position;
         Vector2 targetPosition = GetFilteredTargetPosition(targetPoint.position);
 
-        float distanceToTarget = Vector2.Distance(currentPosition, targetPosition);
+        transform.position = Vector2.MoveTowards(
+            currentPosition,
+            targetPosition,
+            moveSpeed * Time.deltaTime
+        );
+
+        float distanceToTarget = Vector2.Distance(transform.position, targetPosition);
 
         if (distanceToTarget > arrivalThreshold)
         {
-            transform.position = Vector2.MoveTowards(
-                currentPosition,
-                targetPosition,
-                moveSpeed * Time.deltaTime
-            );
-
             UpdateSpriteDirection(targetPosition);
             return;
         }
@@ -137,11 +126,6 @@ public class EnemyPatrolMovement : MonoBehaviour
             return;
         }
 
-        GoToNextPatrolPoint();
-    }
-
-    private void GoToNextPatrolPoint()
-    {
         currentPointIndex++;
 
         if (currentPointIndex >= patrolPoints.Length)
@@ -170,20 +154,20 @@ public class EnemyPatrolMovement : MonoBehaviour
 
     private void UpdateSpriteDirection(Vector2 targetPosition)
     {
-        if (!spriteRendererFlipEnabled || spriteRenderer == null)
-            return;
-
-        float horizontalDirection = targetPosition.x - transform.position.x;
-
-        if (horizontalDirection > 0.01f)
+        if (spriteRendererFlipEnabled)
         {
-            spriteRenderer.flipX = true;
-            UpdateTopColliderSide(true);
-        }
-        else if (horizontalDirection < -0.01f)
-        {
-            spriteRenderer.flipX = false;
-            UpdateTopColliderSide(false);
+            float horizontalDirection = targetPosition.x - transform.position.x;
+
+            if (horizontalDirection > 0.01f)
+            {
+                spriteRenderer.flipX = true;
+                UpdateTopColliderSide(true);
+            }
+            else if (horizontalDirection < -0.01f)
+            {
+                spriteRenderer.flipX = false;
+                UpdateTopColliderSide(false);
+            }
         }
     }
 
@@ -225,9 +209,6 @@ public class EnemyPatrolMovement : MonoBehaviour
 
     private bool HasBoolParameter(string parameterName)
     {
-        if (animator == null)
-            return false;
-
         foreach (AnimatorControllerParameter parameter in animator.parameters)
         {
             if (parameter.name == parameterName &&
@@ -309,6 +290,7 @@ public class EnemyPatrolMovement : MonoBehaviour
             return;
 
         isDead = true;
+
         StopMovementLoopSFX();
 
         if (animator != null && hasIdleParameter)

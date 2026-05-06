@@ -158,7 +158,7 @@ MonoBehaviour:
   transitionObject: {fileID: 0}
   delayBeforeTransition: 2
   transitionDuration: 1.5
-  nextSceneName: 
+  nextSceneName: HowToPlayScene2
 --- !u!95 &7480985698128945988
 Animator:
   serializedVersion: 7

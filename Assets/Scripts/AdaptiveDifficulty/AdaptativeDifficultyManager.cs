@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class AdaptiveDifficultyManager : MonoBehaviour
 {
@@ -14,22 +15,24 @@ public class AdaptiveDifficultyManager : MonoBehaviour
     [SerializeField] private DifficultySettings hardSettings;
 
     [Header("Time Criteria")]
-    [SerializeField] private float goodTimeThreshold = 120f;
-    [SerializeField] private float acceptableTimeThreshold = 180f;
+    [SerializeField] private float goodTimeThreshold = 25f;
+    [SerializeField] private float acceptableTimeThreshold = 40f;
 
     [Header("Damage Criteria")]
-    [SerializeField] private int lowDamageThreshold = 2;
-    [SerializeField] private int mediumDamageThreshold = 4;
+    [SerializeField] private int lowDamageThreshold = 1;
+    [SerializeField] private int mediumDamageThreshold = 3;
 
     [Header("Coin Criteria")]
-    [SerializeField] private float highCoinPercentageThreshold = 0.8f;
-    [SerializeField] private float mediumCoinPercentageThreshold = 0.5f;
+    [SerializeField] private float highCoinPercentageThreshold = 0.75f;
+    [SerializeField] private float mediumCoinPercentageThreshold = 0.4f;
 
     [Header("Last Evaluation Debug")]
     [SerializeField] private int lastScore;
     [SerializeField] private float lastTime;
     [SerializeField] private int lastDamage;
     [SerializeField] private float lastCoinPercentage;
+
+    public event Action<AdaptiveDifficulty> OnDifficultyChanged;
 
     public AdaptiveDifficulty CurrentDifficulty => currentDifficulty;
     public int LastScore => lastScore;
@@ -67,7 +70,7 @@ public class AdaptiveDifficultyManager : MonoBehaviour
 
         lastScore = score;
 
-        currentDifficulty = GetDifficultyFromScore(score, damage);
+        SetDifficulty(GetDifficultyFromScore(score, damage));
 
         Debug.Log(
             $"Adaptive Difficulty -> " +
@@ -114,20 +117,43 @@ public class AdaptiveDifficultyManager : MonoBehaviour
 
     private AdaptiveDifficulty GetDifficultyFromScore(int score, int damage)
     {
-        // Regla de seguridad:
-        // si el jugador recibe mucho daño, no subimos a Hard aunque haya ido rápido
-        // o haya recogido muchas monedas.
+        AdaptiveDifficulty targetDifficulty;
+
         if (damage > mediumDamageThreshold)
+        {
+            targetDifficulty = AdaptiveDifficulty.Easy;
+        }
+        else if (damage > lowDamageThreshold && score < 4)
+        {
+            targetDifficulty = AdaptiveDifficulty.Easy;
+        }
+        else if (score >= 5)
+        {
+            targetDifficulty = AdaptiveDifficulty.Hard;
+        }
+        else if (score >= 3)
+        {
+            targetDifficulty = AdaptiveDifficulty.Normal;
+        }
+        else
+        {
+            targetDifficulty = AdaptiveDifficulty.Easy;
+        }
+
+        return LimitDifficultyJump(currentDifficulty, targetDifficulty);
+    }
+
+    private AdaptiveDifficulty LimitDifficultyJump(
+        AdaptiveDifficulty current, 
+        AdaptiveDifficulty target)
+    {
+        if (current == AdaptiveDifficulty.Easy && target == AdaptiveDifficulty.Hard)
             return AdaptiveDifficulty.Normal;
 
-        // Con 3 criterios, la puntuación máxima es 6.
-        if (score >= 5)
-            return AdaptiveDifficulty.Hard;
-
-        if (score >= 3)
+        if (current == AdaptiveDifficulty.Hard && target == AdaptiveDifficulty.Easy)
             return AdaptiveDifficulty.Normal;
 
-        return AdaptiveDifficulty.Easy;
+        return target;
     }
 
     public DifficultySettings GetCurrentSettings()
@@ -144,11 +170,12 @@ public class AdaptiveDifficultyManager : MonoBehaviour
     public void SetDifficulty(AdaptiveDifficulty newDifficulty)
     {
         currentDifficulty = newDifficulty;
+        OnDifficultyChanged?.Invoke(currentDifficulty);
     }
 
     public void ResetProgress()
     {
-        currentDifficulty = defaultDifficulty;
+        SetDifficulty(defaultDifficulty);
 
         lastScore = 0;
         lastTime = 0f;

@@ -15,6 +15,7 @@ public class SceneTransitionManager : MonoBehaviour
     private int savedCoins = 0;
     public event Action<int> OnCoinsChanged;
 
+
     private void Awake()
     {
         if (instance != null && instance != this)

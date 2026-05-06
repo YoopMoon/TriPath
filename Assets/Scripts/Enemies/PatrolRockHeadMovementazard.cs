@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PatrolHRockHeadMovementazard : MonoBehaviour
+public class PatrolRockHeadMovementazard : MonoBehaviour
 {
     public enum MovementMode
     {
