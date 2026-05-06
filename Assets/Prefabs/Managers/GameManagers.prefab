@@ -251,7 +251,7 @@ MonoBehaviour:
     - HowToPlayScene
     - HowToPlayWorld2
     musicClip: {fileID: 8300000, guid: f5ee21cf8fb714d6492f4bd36526832c, type: 3}
-    volume: 0.2
+    volume: 0.3
   worldMusicEntries:
   - worldPrefix: Map1
     musicClip: {fileID: 8300000, guid: 9a6270964bf0f4274aa86614c413dcbe, type: 3}

@@ -5,11 +5,13 @@ using UnityEngine.UI;
 
 public class HowToPlay : MonoBehaviour
 {
-    [Header("Continue Button")]
-    [SerializeField] private Button continueButton;
+    [Header("Buttons")]
+    [SerializeField] private Button nextButton;
+    [SerializeField] private Button backButton;
 
-    [Header("Next Scene")]
-    [SerializeField] private string nextLevelSceneName = "Map1_Level1";
+    [Header("Scenes")]
+    [SerializeField] private string nextSceneName = "Map1_Level1";
+    [SerializeField] private string backSceneName = "CharacterSelectScene";
 
     [Header("Audio")]
     [SerializeField] private AudioClip clickClip;
@@ -19,52 +21,73 @@ public class HowToPlay : MonoBehaviour
 
     private void Start()
     {
-        if (continueButton != null)
-            continueButton.onClick.AddListener(ContinueToConfiguredScene);
+        isLoadingScene = false;
+
+        if (nextButton != null)
+            nextButton.onClick.AddListener(GoToNextScene);
+
+        if (backButton != null)
+            backButton.onClick.AddListener(GoToBackScene);
     }
 
     private void Update()
     {
-        HandleContinueInput();
+        HandleNextInput();
     }
 
-    private void HandleContinueInput()
+    private void HandleNextInput()
     {
         if (Keyboard.current == null)
             return;
 
         if (Keyboard.current.spaceKey.wasReleasedThisFrame)
-            ContinueToConfiguredScene();
+            GoToNextScene();
     }
 
-    // Usa la escena configurada desde el inspector.
-    // Sirve para continuar con Space o para botones sin parámetro.
-    public void ContinueToConfiguredScene()
+    public void GoToNextScene()
     {
-        LoadScene(nextLevelSceneName);
+        if (isLoadingScene)
+            return;
+
+        isLoadingScene = true;
+
+        PlayClickSFX();
+
+        LoadScene(nextSceneName);
     }
 
-    // Este método es el que debes seleccionar desde el OnClick del botón
-    // si quieres indicar la escena manualmente desde Unity.
-    public void ContinueToScene(string sceneName)
+    public void GoToBackScene()
     {
+        if (isLoadingScene)
+            return;
+
+        isLoadingScene = true;
+
+        PlayClickSFX();
+
+        LoadScene(backSceneName);
+    }
+
+    public void GoToScene(string sceneName)
+    {
+        if (isLoadingScene)
+            return;
+
+        isLoadingScene = true;
+
+        PlayClickSFX();
+
         LoadScene(sceneName);
     }
 
     private void LoadScene(string sceneName)
     {
-        if (isLoadingScene)
-            return;
-
         if (string.IsNullOrEmpty(sceneName))
         {
             Debug.LogWarning("[HowToPlay] Scene name is empty.");
+            isLoadingScene = false;
             return;
         }
-
-        isLoadingScene = true;
-
-        PlayClickSFX();
 
         SceneManager.LoadScene(sceneName);
     }

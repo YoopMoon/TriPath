@@ -59,19 +59,11 @@ public class PauseMenuUI : MonoBehaviour
         Debug.Log("Abrir ajustes");
     }
 
-    public void ExitGame() // Irá al menú principal
-    {
-        ResetRunProgress();
-
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("CharacterSelectScene");
-    }
-
-    public void ChangeCharacter()
+    public void GoToMainMenu()
     {
         ResetRunProgress();
         Time.timeScale = 1f;
-        SceneManager.LoadScene("CharacterSelectScene");
+        SceneManager.LoadScene("MainMenu");
     }
 
     private void ResetRunProgress()

@@ -177,7 +177,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1923181743893334664}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.98999995, y: -1.149, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -365,7 +365,7 @@ Transform:
   m_GameObject: {fileID: 3569976541525568945}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.32999992, y: -0.055000067, z: 0}
+  m_LocalPosition: {x: 0.44, y: -0.055000067, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -720,6 +720,7 @@ GameObject:
   - component: {fileID: 2999030532397788664}
   - component: {fileID: 5675767124789273206}
   - component: {fileID: 4086463820040651506}
+  - component: {fileID: 6235538761512719248}
   m_Layer: 0
   m_Name: SpikeParent
   m_TagString: Untagged
@@ -840,7 +841,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0038956925, y: -0.04789417}
+  m_Offset: {x: -0.0110125765, y: -0.04789417}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -850,7 +851,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.1402923, y: 0.06421166}
+  m_Size: {x: 0.15452607, y: 0.06421166}
   m_EdgeRadius: 0
 --- !u!114 &4086463820040651506
 MonoBehaviour:
@@ -865,9 +866,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   animator: {fileID: 0}
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 2999030532397788664}
   spriteRendererFlipEnabled: 0
-  topDamageCollider: {fileID: 0}
+  topDamageCollider: {fileID: 5675767124789273206}
   maxHealth: 1
   moveSpeed: 0.5
   waitDuration: 3
@@ -876,6 +877,24 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 1099907462001385155}
   - {fileID: 906846502989037953}
+  useMovementLoopSFX: 0
+  movementLoopClip: {fileID: 0}
+  movementLoopVolume: 1
+  movementLoopSource: {fileID: 0}
+--- !u!114 &6235538761512719248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5635861030381062651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f16da6650f4fda14b84dff37f5c04ea5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamagePlayerOnCollision
+  damageAmount: 1
+  knockbackForce: {x: 2.5, y: 2.5}
 --- !u!1 &6475400755055808716
 GameObject:
   m_ObjectHideFlags: 0

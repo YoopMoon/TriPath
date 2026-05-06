@@ -16,11 +16,13 @@ public class CharacterSelectionMenu : MonoBehaviour
     [Header("Character Slots")]
     [SerializeField] private CharacterSlot[] characterSlots;
 
-    [Header("Continue Button")]
-    [SerializeField] private Button continueButton;
+    [Header("Buttons")]
+    [SerializeField] private Button nextButton;
+    [SerializeField] private Button backButton;
 
-    [Header("Next Scene")]
-    [SerializeField] private string nextLevelSceneName = "HowToPlayScene";
+    [Header("Scenes")]
+    [SerializeField] private string nextSceneName = "HowToPlayScene";
+    [SerializeField] private string backSceneName = "MainMenu";
 
     [Header("Initial Selection")]
     [SerializeField] private int selectedIndex = 1;
@@ -35,6 +37,8 @@ public class CharacterSelectionMenu : MonoBehaviour
 
     private void Start()
     {
+        isLoadingScene = false;
+
         if (characterSlots == null || characterSlots.Length == 0)
         {
             Debug.LogWarning("No hay personajes configurados en CharacterSelectionMenu.");
@@ -43,14 +47,17 @@ public class CharacterSelectionMenu : MonoBehaviour
 
         UpdateVisualSelection();
 
-        if (continueButton != null)
-            continueButton.onClick.AddListener(ContinueToGame);
+        if (nextButton != null)
+            nextButton.onClick.AddListener(GoToNextScene);
+
+        if (backButton != null)
+            backButton.onClick.AddListener(GoToBackScene);
     }
 
     private void Update()
     {
         HandleKeyboardSelection();
-        HandleContinueInput();
+        HandleNextInput();
     }
 
     private void HandleKeyboardSelection()
@@ -68,15 +75,13 @@ public class CharacterSelectionMenu : MonoBehaviour
         }
     }
 
-    private void HandleContinueInput()
+    private void HandleNextInput()
     {
         if (Keyboard.current == null)
             return;
 
         if (Keyboard.current.spaceKey.wasReleasedThisFrame)
-        {
-            ContinueToGame();
-        }
+            GoToNextScene();
     }
 
     private void ChangeSelection(int direction)
@@ -109,7 +114,6 @@ public class CharacterSelectionMenu : MonoBehaviour
                 characterSlots[i].selectedPanel.SetActive(isSelected);
         }
 
-        // Guardo ya el personaje actual mientras se va navegando
         SelectedPlayerStore.SelectedPlayer = characterSlots[selectedIndex].playerType;
     }
 
@@ -118,7 +122,6 @@ public class CharacterSelectionMenu : MonoBehaviour
         if (index < 0 || index >= characterSlots.Length)
             return;
 
-        // Solo suena si realmente se cambia a otra card distinta.
         if (selectedIndex != index)
             PlaySelectionSFX();
 
@@ -126,7 +129,7 @@ public class CharacterSelectionMenu : MonoBehaviour
         UpdateVisualSelection();
     }
 
-    public void ContinueToGame()
+    public void GoToNextScene()
     {
         if (isLoadingScene)
             return;
@@ -147,7 +150,31 @@ public class CharacterSelectionMenu : MonoBehaviour
             SceneTransitionManager.instance.ClearTransitionData();
         }
 
-        SceneManager.LoadScene(nextLevelSceneName);
+        LoadScene(nextSceneName);
+    }
+
+    public void GoToBackScene()
+    {
+        if (isLoadingScene)
+            return;
+
+        isLoadingScene = true;
+
+        PlayClickSFX();
+
+        LoadScene(backSceneName);
+    }
+
+    private void LoadScene(string sceneName)
+    {
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            Debug.LogWarning("[CharacterSelectionMenu] Scene name is empty.");
+            isLoadingScene = false;
+            return;
+        }
+
+        SceneManager.LoadScene(sceneName);
     }
 
     private void PlaySelectionSFX()
