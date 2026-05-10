@@ -248,6 +248,7 @@ MonoBehaviour:
     sceneNames:
     - MainMenu
     - CharacterSelectScene
+    - InsertPlayerNameScene
     - HowToPlayScene
     - HowToPlayWorld2
     musicClip: {fileID: 8300000, guid: f5ee21cf8fb714d6492f4bd36526832c, type: 3}

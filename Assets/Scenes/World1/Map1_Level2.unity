@@ -248,8 +248,8 @@ Tilemap:
   - first: {x: -5, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 30
-      m_TileSpriteIndex: 30
+      m_TileIndex: 31
+      m_TileSpriteIndex: 31
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -388,10 +388,10 @@ Tilemap:
     m_RefCount: 1
     m_Data: {fileID: 11400000, guid: eb247cc766f57ae4a9ad7c75e756d66b, type: 2}
   - serializedVersion: 2
-    m_RefCount: 1
+    m_RefCount: 0
     m_Data: {fileID: 11400000, guid: bfb024ed9ce07844382b77d24efe3863, type: 2}
   - serializedVersion: 2
-    m_RefCount: 0
+    m_RefCount: 1
     m_Data: {fileID: 11400000, guid: adebe7706570f84458ec61c900c937ab, type: 2}
   - serializedVersion: 2
     m_RefCount: 0
@@ -512,10 +512,10 @@ Tilemap:
     m_RefCount: 1
     m_Data: {fileID: 8102182086558406705, guid: fc584d329b77b9545b9c9c8bb829e553, type: 3}
   - serializedVersion: 2
-    m_RefCount: 1
+    m_RefCount: 0
     m_Data: {fileID: -7850267199778421155, guid: fc584d329b77b9545b9c9c8bb829e553, type: 3}
   - serializedVersion: 2
-    m_RefCount: 0
+    m_RefCount: 1
     m_Data: {fileID: -6278356596846833739, guid: fc584d329b77b9545b9c9c8bb829e553, type: 3}
   - serializedVersion: 2
     m_RefCount: 0
@@ -888,7 +888,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_Tiles.Array.data[0].second.m_TileIndex
-      value: 30
+      value: 31
       objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_Tiles.Array.data[1].second.m_TileIndex
@@ -948,11 +948,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_TileAssetArray.Array.data[30].m_RefCount
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_TileAssetArray.Array.data[31].m_RefCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_TileAssetArray.Array.data[38].m_RefCount
@@ -980,11 +980,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[30].m_RefCount
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[31].m_RefCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[38].m_RefCount
@@ -1032,7 +1032,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_Tiles.Array.data[0].second.m_TileSpriteIndex
-      value: 30
+      value: 31
       objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_Tiles.Array.data[1].second.m_TileMatrixIndex

@@ -31,6 +31,9 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float damageVolume = 1f;
     [SerializeField] private AudioClip healClip;
     [SerializeField] private float healVolume = 1f;
+    [SerializeField] private AudioClip gameOverClip;
+    [SerializeField] private float gameOverVolume = 1f;
+
 
     public bool hitReceived;
 
@@ -217,6 +220,11 @@ public class PlayerHealth : MonoBehaviour
 
         float verticalVelocity = deathJumpForce;
         float timer = 0f;
+
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlaySFX(gameOverClip, gameOverVolume);
+        }
 
         while (timer < deathDelayBeforeGameOver)
         {

@@ -136,7 +136,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 126193387452289254}
         m_TargetAssemblyTypeName: PauseMenuUI, Assembly-CSharp
-        m_MethodName: PlayClickButton
+        m_MethodName: GoToCharacterSelectScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

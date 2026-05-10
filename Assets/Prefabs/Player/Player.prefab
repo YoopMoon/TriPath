@@ -408,6 +408,8 @@ MonoBehaviour:
   damageVolume: 1
   healClip: {fileID: 8300000, guid: 3484f990080c00e4e867462de60df85e, type: 3}
   healVolume: 0.2
+  gameOverClip: {fileID: 8300000, guid: ad560734b5edc7d459b9e8cc17cba128, type: 3}
+  gameOverVolume: 0.5
   hitReceived: 0
 --- !u!114 &3990337104940614192
 MonoBehaviour:

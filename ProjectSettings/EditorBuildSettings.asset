@@ -39,6 +39,9 @@ EditorBuildSettings:
     path: Assets/Scenes/World1/Map1_Level5.unity
     guid: 9ada1869453f1524995db16ed585d655
   - enabled: 1
+    path: Assets/Scenes/Menus/InsertPlayerNameScene.unity
+    guid: dfc212d3467b5de48914e44a492c2582
+  - enabled: 1
     path: Assets/Scenes/Menus/HowToPlayScene2.unity
     guid: 6a3c16b5343ca7b4b9afc200b31d4929
   - enabled: 1
@@ -56,5 +59,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/World2/Map2_Level5.unity
     guid: 5aa11ddb73f508247bd2d3f8caae6406
+  - enabled: 1
+    path: Assets/Scenes/Menus/RankingPlayersScene.unity
+    guid: 87d963626cd824b4a81f6f4bfcf9c36e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

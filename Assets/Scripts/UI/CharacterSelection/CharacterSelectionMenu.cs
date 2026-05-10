@@ -21,7 +21,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     [SerializeField] private Button backButton;
 
     [Header("Scenes")]
-    [SerializeField] private string nextSceneName = "HowToPlayScene";
+    [SerializeField] private string nextSceneName = "InsertPlayerNameScene";
     [SerializeField] private string backSceneName = "MainMenu";
 
     [Header("Initial Selection")]
@@ -150,7 +150,7 @@ public class CharacterSelectionMenu : MonoBehaviour
             SceneTransitionManager.instance.ClearTransitionData();
         }
 
-        LoadScene(nextSceneName);
+        SceneManager.LoadScene(nextSceneName);
     }
 
     public void GoToBackScene()
@@ -162,19 +162,7 @@ public class CharacterSelectionMenu : MonoBehaviour
 
         PlayClickSFX();
 
-        LoadScene(backSceneName);
-    }
-
-    private void LoadScene(string sceneName)
-    {
-        if (string.IsNullOrEmpty(sceneName))
-        {
-            Debug.LogWarning("[CharacterSelectionMenu] Scene name is empty.");
-            isLoadingScene = false;
-            return;
-        }
-
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene(backSceneName);
     }
 
     private void PlaySelectionSFX()

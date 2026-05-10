@@ -12201,12 +12201,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2640100691765103658, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
       propertyPath: nextSceneName
-      value: MainMEnu
+      value: RankingPlayersScene
       objectReference: {fileID: 0}
     - target: {fileID: 2640100691765103658, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
       propertyPath: transitionObject
       value: 
       objectReference: {fileID: 1974211074}
+    - target: {fileID: 2640100691765103658, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
+      propertyPath: saveRankingOnFinish
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4082684998779075518, guid: 1555c18d61f48ff45969b209d2a34e29, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.811

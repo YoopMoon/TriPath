@@ -15,13 +15,14 @@ public class LevelMetrics : MonoBehaviour
     private int coinsCollected;
     private int totalCoins;
 
-    // Evita guardar dos veces el resumen del mismo nivel en la misma visita.
+    // Evita guardar dos veces el resumen de monedas del mismo nivel en la misma visita.
     private bool currentLevelSummarySaved;
     private string currentLevelSceneName = string.Empty;
 
-    // Resumen acumulado por nivel para poder mostrar el resumen final del mapa.
+    // Resumen acumulado por nivel para poder mostrar el resumen final del mapa/ranking.
     // Key: nombre de escena, por ejemplo "Map1_Level1".
     private readonly Dictionary<string, LevelCoinSummary> levelCoinSummaries = new();
+    private readonly Dictionary<string, LevelPerformanceSummary> levelPerformanceSummaries = new();
 
     public float ElapsedTime => Time.time - levelStartTime;
     public int DamageTaken => damageTaken;
@@ -53,6 +54,22 @@ public class LevelMetrics : MonoBehaviour
             this.mapName = mapName;
             this.coinsCollected = coinsCollected;
             this.totalCoins = totalCoins;
+        }
+    }
+
+    public class LevelPerformanceSummary
+    {
+        public string sceneName;
+        public string mapName;
+        public int damageTaken;
+        public float elapsedTime;
+
+        public LevelPerformanceSummary(string sceneName, string mapName, int damageTaken, float elapsedTime)
+        {
+            this.sceneName = sceneName;
+            this.mapName = mapName;
+            this.damageTaken = damageTaken;
+            this.elapsedTime = elapsedTime;
         }
     }
 
@@ -123,8 +140,6 @@ public class LevelMetrics : MonoBehaviour
 
         if (totalCoins > 0)
             coinsCollected = Mathf.Min(coinsCollected, totalCoins);
-
-        //Debug.Log($"[LevelMetrics] Coin collected: {coinsCollected}/{totalCoins}");
     }
 
     public void SetTotalCoins(int amount)
@@ -133,8 +148,6 @@ public class LevelMetrics : MonoBehaviour
 
         if (totalCoins > 0)
             coinsCollected = Mathf.Min(coinsCollected, totalCoins);
-
-        // Debug.Log($"[LevelMetrics] Total coins set for {currentLevelSceneName}: {totalCoins}");
     }
 
     public void SaveCurrentLevelCoinSummary()
@@ -149,7 +162,7 @@ public class LevelMetrics : MonoBehaviour
 
         if (currentLevelSummarySaved)
         {
-            Debug.Log($"[LevelMetrics] Summary for {sceneName} was already saved. Skipping duplicate save.");
+            Debug.Log($"[LevelMetrics] Coin summary for {sceneName} was already saved. Skipping duplicate save.");
             return;
         }
 
@@ -162,10 +175,6 @@ public class LevelMetrics : MonoBehaviour
         {
             existingSummary.totalCoins = Mathf.Max(existingSummary.totalCoins, safeTotalCoins);
 
-            // Si el jugador vuelve a un nivel anterior, solo podrá recoger monedas
-            // que aún no estaban recogidas gracias al sistema de persistencia.
-            // Por eso aquí sumamos lo recogido en esta visita, limitando el resultado
-            // para que nunca supere el total del nivel.
             existingSummary.coinsCollected = Mathf.Clamp(
                 existingSummary.coinsCollected + safeCoinsCollected,
                 0,
@@ -182,7 +191,71 @@ public class LevelMetrics : MonoBehaviour
 
         currentLevelSummarySaved = true;
 
-        Debug.Log($"[LevelMetrics] Saved {sceneName}: {safeCoinsCollected}/{safeTotalCoins}");
+        Debug.Log($"[LevelMetrics] Saved coins {sceneName}: {safeCoinsCollected}/{safeTotalCoins}");
+    }
+
+    public void SaveCurrentLevelPerformanceSummary()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        string mapName = GetMapNameFromScene(sceneName);
+
+        int safeDamageTaken = Mathf.Max(0, damageTaken);
+        float safeElapsedTime = Mathf.Max(0f, ElapsedTime);
+
+        if (levelPerformanceSummaries.TryGetValue(sceneName, out LevelPerformanceSummary existingSummary))
+        {
+            existingSummary.damageTaken = safeDamageTaken;
+            existingSummary.elapsedTime = safeElapsedTime;
+        }
+        else
+        {
+            levelPerformanceSummaries.Add(
+                sceneName,
+                new LevelPerformanceSummary(sceneName, mapName, safeDamageTaken, safeElapsedTime)
+            );
+        }
+
+        Debug.Log($"[LevelMetrics] Saved performance {sceneName}: Damage {safeDamageTaken}, Time {safeElapsedTime:0.00}s");
+    }
+
+    public int GetTotalCoinsCollected()
+    {
+        int total = 0;
+
+        foreach (LevelCoinSummary summary in levelCoinSummaries.Values)
+            total += summary.coinsCollected;
+
+        return total;
+    }
+
+    public int GetTotalCoinsAvailable()
+    {
+        int total = 0;
+
+        foreach (LevelCoinSummary summary in levelCoinSummaries.Values)
+            total += summary.totalCoins;
+
+        return total;
+    }
+
+    public int GetTotalDamageTaken()
+    {
+        int total = 0;
+
+        foreach (LevelPerformanceSummary summary in levelPerformanceSummaries.Values)
+            total += summary.damageTaken;
+
+        return total;
+    }
+
+    public float GetTotalElapsedTime()
+    {
+        float total = 0f;
+
+        foreach (LevelPerformanceSummary summary in levelPerformanceSummaries.Values)
+            total += summary.elapsedTime;
+
+        return total;
     }
 
     public void LogLevelCoinSummaries()
@@ -202,12 +275,10 @@ public class LevelMetrics : MonoBehaviour
 
         MapCoinSummary summary = GetMapCoinSummary(currentMapName);
         float percentage = summary.CoinPercentage * 100f;
-        
-        /*
+
         Debug.Log("===== MAP COIN SUMMARY =====");
         Debug.Log($"{summary.mapName}: {summary.coinsCollected}/{summary.totalCoins} coins collected ({percentage:0.##}%)");
         Debug.Log("============================");
-        */
     }
 
     private MapCoinSummary GetMapCoinSummary(string mapName)
@@ -249,6 +320,7 @@ public class LevelMetrics : MonoBehaviour
     public void ResetProgress()
     {
         levelCoinSummaries.Clear();
+        levelPerformanceSummaries.Clear();
 
         levelStartTime = Time.time;
         damageTaken = 0;

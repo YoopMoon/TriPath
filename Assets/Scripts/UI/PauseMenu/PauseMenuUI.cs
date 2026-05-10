@@ -66,6 +66,13 @@ public class PauseMenuUI : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
+    public void GoToCharacterSelectScene()
+    {
+        ResetRunProgress();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("CharacterSelectScene");
+    }
+
     private void ResetRunProgress()
     {
         if (AdaptiveDifficultyManager.Instance != null)

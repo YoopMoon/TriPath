@@ -669,22 +669,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManagers
       objectReference: {fileID: 0}
-    - target: {fileID: 8177311077576234421, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
-      propertyPath: sceneGroupMusicEntries.Array.data[0].sceneNames.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8177311077576234421, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
-      propertyPath: 'sceneGroupMusicEntries.Array.data[0].sceneNames.Array.data[2]'
-      value: HowToPlayWorld2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8177311077576234421, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
-      propertyPath: 'sceneGroupMusicEntries.Array.data[0].sceneNames.Array.data[3]'
-      value: HowToPlayScene
-      objectReference: {fileID: 0}
-    - target: {fileID: 8177311077576234421, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
-      propertyPath: 'sceneGroupMusicEntries.Array.data[0].sceneNames.Array.data[4]'
-      value: HowToPlayWorld2
-      objectReference: {fileID: 0}
     - target: {fileID: 9196756695934233285, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
       propertyPath: m_Volume
       value: 0.25
@@ -6151,10 +6135,6 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3227869681765862796, guid: 6b0807d913cbbe148859c00c53cb97f5, type: 3}
-      propertyPath: damageAmount
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 3227869681765862796, guid: 6b0807d913cbbe148859c00c53cb97f5, type: 3}
       propertyPath: m_EditorClassIdentifier
       value: Assembly-CSharp::EnvironmentHazard
       objectReference: {fileID: 0}
@@ -6671,10 +6651,6 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3227869681765862796, guid: 6b0807d913cbbe148859c00c53cb97f5, type: 3}
-      propertyPath: damageAmount
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 3227869681765862796, guid: 6b0807d913cbbe148859c00c53cb97f5, type: 3}
       propertyPath: m_EditorClassIdentifier
       value: Assembly-CSharp::EnvironmentHazard
       objectReference: {fileID: 0}
@@ -7008,10 +6984,6 @@ PrefabInstance:
     - target: {fileID: 3227869681765862796, guid: 6b0807d913cbbe148859c00c53cb97f5, type: 3}
       propertyPath: knockbackY
       value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3227869681765862796, guid: 6b0807d913cbbe148859c00c53cb97f5, type: 3}
-      propertyPath: damageAmount
-      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3227869681765862796, guid: 6b0807d913cbbe148859c00c53cb97f5, type: 3}
       propertyPath: m_EditorClassIdentifier

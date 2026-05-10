@@ -65,10 +65,7 @@ public class SceneExit : MonoBehaviour
 
     private void HandleForwardExit(string currentLevelID)
     {
-        // Guardamos el resumen de monedas del nivel actual.
-        // Esto sirve para el resumen final del mapa.
-        if (LevelMetrics.Instance != null)
-            LevelMetrics.Instance.SaveCurrentLevelCoinSummary();
+        SaveCurrentLevelResults();
 
         bool shouldEvaluateDifficulty = ShouldEvaluateDifficulty(currentLevelID);
 
@@ -78,13 +75,20 @@ public class SceneExit : MonoBehaviour
             return;
         }
 
-        // Evaluamos la dificultad solo la primera vez que se completa el nivel
-        // y solo si se sale por una salida de avance.
         if (AdaptiveDifficultyManager.Instance != null)
             AdaptiveDifficultyManager.Instance.EvaluatePlayerPerformance();
 
         if (LevelProgressManager.Instance != null)
             LevelProgressManager.Instance.MarkCompleted(currentLevelID);
+    }
+
+    private void SaveCurrentLevelResults()
+    {
+        if (LevelMetrics.Instance == null)
+            return;
+
+        LevelMetrics.Instance.SaveCurrentLevelCoinSummary();
+        LevelMetrics.Instance.SaveCurrentLevelPerformanceSummary();
     }
 
     private bool ShouldEvaluateDifficulty(string currentLevelID)
