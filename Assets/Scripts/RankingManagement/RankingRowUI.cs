@@ -1,16 +1,17 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RankingRowUI : MonoBehaviour
 {
     [Header("Texts")]
-    [SerializeField] private Text rankText;
-    [SerializeField] private Text playerNameText;
-    [SerializeField] private Text characterText;
-    [SerializeField] private Text scoreText;
-    [SerializeField] private Text coinsText;
-    [SerializeField] private Text damageText;
-    [SerializeField] private Text timeText;
+    [SerializeField] private TMP_Text rankText;
+    [SerializeField] private TMP_Text playerNameText;
+    [SerializeField] private TMP_Text characterText;
+    [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private TMP_Text coinsText;
+    [SerializeField] private TMP_Text damageText;
+    [SerializeField] private TMP_Text timeText;
 
     public void Setup(int rankPosition, RankingEntry entry)
     {
