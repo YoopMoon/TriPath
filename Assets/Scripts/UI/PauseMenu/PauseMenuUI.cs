@@ -1,8 +1,15 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class PauseMenuUI : MonoBehaviour
 {
+    private static PauseMenuUI keyboardController;
+    private static GameObject sharedPauseButton;
+    private static GameObject sharedPauseScreen;
+    private static GameObject sharedMenuPause;
+    private static GameObject sharedMenuPauseShadow;
+
     [Header("Pause Elements")]
     [SerializeField] private GameObject pauseButton;
     [SerializeField] private GameObject pauseScreen;
@@ -13,43 +20,112 @@ public class PauseMenuUI : MonoBehaviour
     [SerializeField] private AudioClip clickClip;
     [SerializeField] private float clickVolume = 1f;
 
-    public void OpenPauseMenu()
+    private static bool isPaused;
+
+    private void Awake()
+    {
+        RegisterSharedReferences();
+    }
+
+    private void OnEnable()
+    {
+        RegisterSharedReferences();
+        TryBecomeKeyboardController();
+    }
+
+    private void OnDisable()
+    {
+        if (keyboardController == this)
+            keyboardController = null;
+    }
+
+    private void Update()
+    {
+        if (keyboardController == null)
+            TryBecomeKeyboardController();
+
+        if (keyboardController != this)
+            return;
+
+        if (Keyboard.current == null)
+            return;
+
+        if (!Keyboard.current.escapeKey.wasPressedThisFrame)
+            return;
+
+        if (isPaused)
+            ResumeGame();
+        else
+            OpenPauseMenu();
+    }
+
+    private void TryBecomeKeyboardController()
+    {
+        if (keyboardController == null || (keyboardController.pauseButton == null && pauseButton != null))
+            keyboardController = this;
+    }
+
+    private void RegisterSharedReferences()
     {
         if (pauseButton != null)
-            pauseButton.SetActive(false);
+            sharedPauseButton = pauseButton;
 
         if (pauseScreen != null)
-            pauseScreen.SetActive(true);
+            sharedPauseScreen = pauseScreen;
 
         if (menuPause != null)
-            menuPause.SetActive(true);
+            sharedMenuPause = menuPause;
 
         if (menuPauseShadow != null)
-            menuPauseShadow.SetActive(true);
+            sharedMenuPauseShadow = menuPauseShadow;
+    }
+
+    public void OpenPauseMenu()
+    {
+        RegisterSharedReferences();
+        isPaused = true;
+
+        GameObject targetPauseButton = pauseButton != null ? pauseButton : sharedPauseButton;
+        GameObject targetPauseScreen = pauseScreen != null ? pauseScreen : sharedPauseScreen;
+        GameObject targetMenuPause = menuPause != null ? menuPause : sharedMenuPause;
+        GameObject targetMenuPauseShadow = menuPauseShadow != null ? menuPauseShadow : sharedMenuPauseShadow;
+
+        if (targetPauseButton != null)
+            targetPauseButton.SetActive(false);
+
+        if (targetPauseScreen != null)
+            targetPauseScreen.SetActive(true);
+
+        if (targetMenuPause != null)
+            targetMenuPause.SetActive(true);
+
+        if (targetMenuPauseShadow != null)
+            targetMenuPauseShadow.SetActive(true);
 
         Time.timeScale = 0f;
     }
 
     public void ResumeGame()
     {
-        if (pauseButton != null)
-            pauseButton.SetActive(true);
+        RegisterSharedReferences();
+        isPaused = false;
 
-        if (pauseScreen != null)
-            pauseScreen.SetActive(false);
+        GameObject targetPauseButton = pauseButton != null ? pauseButton : sharedPauseButton;
+        GameObject targetPauseScreen = pauseScreen != null ? pauseScreen : sharedPauseScreen;
+        GameObject targetMenuPause = menuPause != null ? menuPause : sharedMenuPause;
+        GameObject targetMenuPauseShadow = menuPauseShadow != null ? menuPauseShadow : sharedMenuPauseShadow;
 
-        if (menuPause != null)
-            menuPause.SetActive(false);
+        if (targetPauseButton != null)
+            targetPauseButton.SetActive(true);
 
-        if (menuPauseShadow != null)
-        {
-            Debug.Log("[PauseMenuUI] Desactivando shadow: " + menuPauseShadow.name);
-            menuPauseShadow.SetActive(false);
-        }
-        else
-        {
-            Debug.LogWarning("[PauseMenuUI] menuPauseShadow no está asignado.");
-        }
+        if (targetPauseScreen != null)
+            targetPauseScreen.SetActive(false);
+
+        if (targetMenuPause != null)
+            targetMenuPause.SetActive(false);
+
+        if (targetMenuPauseShadow != null)
+            targetMenuPauseShadow.SetActive(false);
 
         Time.timeScale = 1f;
     }
@@ -61,6 +137,7 @@ public class PauseMenuUI : MonoBehaviour
 
     public void GoToMainMenu()
     {
+        isPaused = false;
         ResetRunProgress();
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
@@ -68,6 +145,7 @@ public class PauseMenuUI : MonoBehaviour
 
     public void GoToCharacterSelectScene()
     {
+        isPaused = false;
         ResetRunProgress();
         Time.timeScale = 1f;
         SceneManager.LoadScene("CharacterSelectScene");
@@ -108,7 +186,6 @@ public class PauseMenuUI : MonoBehaviour
 
     public void ResumeMusic()
     {
-
         if (MusicManager.Instance != null)
             MusicManager.Instance.ResumeMusic();
     }

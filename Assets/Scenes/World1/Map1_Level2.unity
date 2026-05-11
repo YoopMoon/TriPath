@@ -778,6 +778,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 651587486048306731, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
+      propertyPath: m_CompositeOperation
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 707044012949873202, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       propertyPath: m_Tiles.Array.size
       value: 5
@@ -11651,13 +11655,135 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 361477052600468784, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
       insertIndex: -1
       addedObject: {fileID: 170323661}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2501557063395803291, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 508230237}
   m_SourcePrefab: {fileID: 100100000, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
 --- !u!4 &508230234 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 361477052600468784, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
   m_PrefabInstance: {fileID: 508230233}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &508230235 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2501557063395803291, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
+  m_PrefabInstance: {fileID: 508230233}
+  m_PrefabAsset: {fileID: 0}
+--- !u!19719996 &508230236 stripped
+TilemapCollider2D:
+  m_CorrespondingSourceObject: {fileID: 651587486048306731, guid: 94c05a3dbb4ed4242b981d49a8cda2ad, type: 3}
+  m_PrefabInstance: {fileID: 508230233}
+  m_PrefabAsset: {fileID: 0}
+--- !u!66 &508230237
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508230235}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: 4adfb91df4fa1744a9639d7b8d626dbe, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 1
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 508230236}
+    m_ColliderPaths:
+    - - X: 7999999
+        Y: 999999
+      - X: 7999999
+        Y: 899999
+      - X: 9599999
+        Y: 899999
+      - X: 9599999
+        Y: 1600000
+      - X: 6400000
+        Y: 1600000
+      - X: 6400000
+        Y: 999999
+      - X: 6500000
+        Y: 899999
+      - X: 7899999
+        Y: 899999
+    - - X: 11200000
+        Y: 999999
+      - X: 11200000
+        Y: 1600000
+      - X: 9600000
+        Y: 1600000
+      - X: 9600000
+        Y: 899999
+      - X: 11100000
+        Y: 899999
+    - - X: -6400000
+        Y: -2200000
+      - X: -6300000
+        Y: -2300000
+      - X: -4900000
+        Y: -2300000
+      - X: -4800000
+        Y: -2200000
+      - X: -4800000
+        Y: -1600000
+      - X: -7999999
+        Y: -1600000
+      - X: -7999999
+        Y: -2200000
+      - X: -7899999
+        Y: -2300000
+      - X: -6400000
+        Y: -2300000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: 0.7899891, y: 0.0899999}
+      - {x: 0.7999999, y: 0.0999125}
+      - {x: 0.8000292, y: 0.0899999}
+      - {x: 1.1100076, y: 0.0900075}
+      - {x: 1.12, y: 0.1000107}
+      - {x: 1.1199707, y: 0.16}
+      - {x: 0.64, y: 0.1599707}
+      - {x: 0.6400076, y: 0.0999923}
+      - {x: 0.6500108, y: 0.0899999}
+    - - {x: -0.6400293, y: -0.23}
+      - {x: -0.6399383, y: -0.22006181}
+      - {x: -0.6299892, y: -0.23}
+      - {x: -0.4899924, y: -0.2299924}
+      - {x: -0.48000002, y: -0.2199892}
+      - {x: -0.4800293, y: -0.16}
+      - {x: -0.7999999, y: -0.1600293}
+      - {x: -0.7999923, y: -0.2200076}
+      - {x: -0.7899891, y: -0.23}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 508230235}
 --- !u!4 &509197645 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3070892451537440628, guid: 614fc0d8232411947996b080701d06b0, type: 3}
