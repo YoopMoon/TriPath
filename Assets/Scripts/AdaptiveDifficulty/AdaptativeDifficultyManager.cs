@@ -6,6 +6,7 @@ public class AdaptiveDifficultyManager : MonoBehaviour
     public static AdaptiveDifficultyManager Instance { get; private set; }
 
     [Header("Current Difficulty")]
+    [SerializeField] private bool adaptiveDifficultyEnabled = true;
     [SerializeField] private AdaptiveDifficulty currentDifficulty = AdaptiveDifficulty.Normal;
     [SerializeField] private AdaptiveDifficulty defaultDifficulty = AdaptiveDifficulty.Normal;
 
@@ -33,7 +34,9 @@ public class AdaptiveDifficultyManager : MonoBehaviour
     [SerializeField] private float lastCoinPercentage;
 
     public event Action<AdaptiveDifficulty> OnDifficultyChanged;
+    public event Action<bool> OnAdaptiveDifficultyModeChanged;
 
+    public bool AdaptiveDifficultyEnabled => adaptiveDifficultyEnabled;
     public AdaptiveDifficulty CurrentDifficulty => currentDifficulty;
     public int LastScore => lastScore;
 
@@ -69,6 +72,22 @@ public class AdaptiveDifficultyManager : MonoBehaviour
         score += EvaluateCoinScore(coinPercentage);
 
         lastScore = score;
+
+        if (!adaptiveDifficultyEnabled)
+        {
+            SetDifficulty(defaultDifficulty);
+
+            Debug.Log(
+                $"Adaptive Difficulty disabled -> " +
+                $"Time: {time:0.00}s, " +
+                $"Damage: {damage}, " +
+                $"Coins: {coinPercentage * 100f:0.##}%, " +
+                $"Score: {score}/6, " +
+                $"Difficulty kept at: {currentDifficulty}"
+            );
+
+            return;
+        }
 
         SetDifficulty(GetDifficultyFromScore(score, damage));
 
@@ -158,7 +177,15 @@ public class AdaptiveDifficultyManager : MonoBehaviour
 
     public DifficultySettings GetCurrentSettings()
     {
-        return currentDifficulty switch
+        if (!adaptiveDifficultyEnabled)
+            return GetSettingsForDifficulty(defaultDifficulty);
+
+        return GetSettingsForDifficulty(currentDifficulty);
+    }
+
+    private DifficultySettings GetSettingsForDifficulty(AdaptiveDifficulty difficulty)
+    {
+        return difficulty switch
         {
             AdaptiveDifficulty.Easy => easySettings,
             AdaptiveDifficulty.Normal => normalSettings,
@@ -171,6 +198,26 @@ public class AdaptiveDifficultyManager : MonoBehaviour
     {
         currentDifficulty = newDifficulty;
         OnDifficultyChanged?.Invoke(currentDifficulty);
+    }
+
+    public void SetAdaptiveDifficultyEnabled(bool enabled)
+    {
+        if (adaptiveDifficultyEnabled == enabled)
+            return;
+
+        adaptiveDifficultyEnabled = enabled;
+
+        if (!adaptiveDifficultyEnabled)
+            SetDifficulty(defaultDifficulty);
+
+        OnAdaptiveDifficultyModeChanged?.Invoke(adaptiveDifficultyEnabled);
+
+        Debug.Log($"Adaptive Difficulty enabled: {adaptiveDifficultyEnabled}");
+    }
+
+    public void ToggleAdaptiveDifficulty()
+    {
+        SetAdaptiveDifficultyEnabled(!adaptiveDifficultyEnabled);
     }
 
     public void ResetProgress()

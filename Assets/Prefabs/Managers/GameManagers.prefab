@@ -248,7 +248,7 @@ MonoBehaviour:
     sceneNames:
     - MainMenu
     - CharacterSelectScene
-    - InsertPlayerNameScene
+    - HowToPlayWorld2
     - HowToPlayScene
     - HowToPlayWorld2
     musicClip: {fileID: 8300000, guid: f5ee21cf8fb714d6492f4bd36526832c, type: 3}
@@ -265,6 +265,7 @@ MonoBehaviour:
     volume: 0.08
   defaultVolume: 0.12
   crossfadeDuration: 1.5
+  masterMusicVolume: 0.5
 --- !u!1 &7550046271439610597
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,6 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4325fac81b1672349bc4b6d8db3ae994, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AdaptiveDifficultyManager
+  adaptiveDifficultyEnabled: 1
   currentDifficulty: 1
   defaultDifficulty: 1
   easySettings:

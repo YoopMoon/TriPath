@@ -24,12 +24,12 @@ public class SpikedBallRotation : MonoBehaviour
     // Influencia reducida para la bola pendular.
     // El péndulo ya acelera de forma natural por la gravedad, por eso conviene
     // que la dificultad no multiplique todo el movimiento de forma tan agresiva.
-    [SerializeField] private float swingAdaptiveInfluence = 0.35f;
+    [SerializeField] private float swingAdaptiveInfluence = 0.75f;
 
     // Límites para evitar que el péndulo quede demasiado lento en Easy
     // o demasiado rápido en Hard.
-    [SerializeField] private float minSwingMultiplier = 0.75f;
-    [SerializeField] private float maxSwingMultiplier = 1.25f;
+    [SerializeField] private float minSwingMultiplier = 0.5f;
+    [SerializeField] private float maxSwingMultiplier = 1.35f;
 
     private Quaternion initialRotation;
 
@@ -45,6 +45,26 @@ public class SpikedBallRotation : MonoBehaviour
 
         ApplyDifficultySettings();
         InitializeSwing();
+    }
+
+    private void OnEnable()
+    {
+        if (AdaptiveDifficultyManager.Instance != null)
+        {
+            AdaptiveDifficultyManager.Instance.OnDifficultyChanged += HandleDifficultyChanged;
+            AdaptiveDifficultyManager.Instance.OnAdaptiveDifficultyModeChanged += HandleAdaptiveDifficultyModeChanged;
+        }
+
+        ApplyDifficultySettings();
+    }
+
+    private void OnDisable()
+    {
+        if (AdaptiveDifficultyManager.Instance != null)
+        {
+            AdaptiveDifficultyManager.Instance.OnDifficultyChanged -= HandleDifficultyChanged;
+            AdaptiveDifficultyManager.Instance.OnAdaptiveDifficultyModeChanged -= HandleAdaptiveDifficultyModeChanged;
+        }
     }
 
     private void Update()
@@ -123,7 +143,7 @@ public class SpikedBallRotation : MonoBehaviour
 
         // En el péndulo mantenemos Time.deltaTime normal.
         // La dificultad se aplica sobre la gravedad, no sobre el tiempo completo.
-        float deltaTime = Time.deltaTime;
+        float deltaTime = Time.deltaTime * swingMultiplier;
 
         float adaptedGravity = swingGravity * swingMultiplier;
 
@@ -157,5 +177,15 @@ public class SpikedBallRotation : MonoBehaviour
         }
 
         transform.rotation = initialRotation * Quaternion.Euler(0f, 0f, currentSwingAngle);
+    }
+
+    private void HandleDifficultyChanged(AdaptiveDifficulty difficulty)
+    {
+        ApplyDifficultySettings();
+    }
+
+    private void HandleAdaptiveDifficultyModeChanged(bool enabled)
+    {
+        ApplyDifficultySettings();
     }
 }

@@ -730,6 +730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DifficultyUI
   difficultyText: {fileID: 722691766603471438}
+  difficultyDisplayed: 1
 --- !u!1 &5288268131094998516
 GameObject:
   m_ObjectHideFlags: 0

@@ -784,33 +784,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5223672971552275148, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
-      propertyPath: m_Volume
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 7550046271439610597, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
       propertyPath: m_Name
       value: GameManagers
       objectReference: {fileID: 0}
     - target: {fileID: 8177311077576234421, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
-      propertyPath: sceneGroupMusicEntries.Array.data[0].sceneNames.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8177311077576234421, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
       propertyPath: 'sceneGroupMusicEntries.Array.data[0].sceneNames.Array.data[2]'
       value: HowToPlayWorld2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8177311077576234421, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
-      propertyPath: 'sceneGroupMusicEntries.Array.data[0].sceneNames.Array.data[3]'
-      value: HowToPlayScene
-      objectReference: {fileID: 0}
-    - target: {fileID: 8177311077576234421, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
-      propertyPath: 'sceneGroupMusicEntries.Array.data[0].sceneNames.Array.data[4]'
-      value: HowToPlayWorld2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9196756695934233285, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
-      propertyPath: m_Volume
-      value: 0.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8586,9 +8566,9 @@ SceneRoots:
   - {fileID: 88977317636908770}
   - {fileID: 141559058}
   - {fileID: 1346477349045406833}
+  - {fileID: 313160918}
   - {fileID: 8589337640087126758}
   - {fileID: 1792616139593904609}
   - {fileID: 2014359190501653018}
-  - {fileID: 313160918}
   - {fileID: 962326454}
   - {fileID: 1221641894}

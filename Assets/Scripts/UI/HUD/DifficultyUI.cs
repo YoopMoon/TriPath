@@ -4,13 +4,14 @@ using UnityEngine.UI;
 public class DifficultyUI : MonoBehaviour
 {
     [SerializeField] private Text difficultyText;
+    [SerializeField] public bool difficultyDisplayed = true;
 
     private void Start()
     {
         if (difficultyText == null)
             difficultyText = GetComponent<Text>();
 
-        if (AdaptiveDifficultyManager.Instance != null)
+        if (AdaptiveDifficultyManager.Instance != null && difficultyDisplayed)
         {
             AdaptiveDifficultyManager.Instance.OnDifficultyChanged += UpdateDifficultyText;
             UpdateDifficultyText(AdaptiveDifficultyManager.Instance.CurrentDifficulty);
@@ -25,22 +26,24 @@ public class DifficultyUI : MonoBehaviour
 
     private void UpdateDifficultyText(AdaptiveDifficulty difficulty)
     {
-        difficultyText.text = "Mode: " + GetDifficultyName(difficulty);
+        if (difficultyDisplayed) {
+            difficultyText.text = "Mode: " + GetDifficultyName(difficulty);
 
-        switch (difficulty)
-        {
-            case AdaptiveDifficulty.Easy:
-                difficultyText.color = new Color(0.2f, 0.9f, 0.2f);
-                break;
+            switch (difficulty)
+            {
+                case AdaptiveDifficulty.Easy:
+                    difficultyText.color = new Color(0.2f, 0.9f, 0.2f);
+                    break;
 
-            case AdaptiveDifficulty.Hard:
-                difficultyText.color = new Color(0.9f, 0.2f, 0.2f);
-                break;
+                case AdaptiveDifficulty.Hard:
+                    difficultyText.color = new Color(0.9f, 0.2f, 0.2f);
+                    break;
 
-            case AdaptiveDifficulty.Normal:
-            default:
-                difficultyText.color = Color.white;
-                break;
+                case AdaptiveDifficulty.Normal:
+                default:
+                    difficultyText.color = Color.white;
+                    break;
+            }
         }
     }
 

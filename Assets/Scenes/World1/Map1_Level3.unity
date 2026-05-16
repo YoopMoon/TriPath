@@ -11409,18 +11409,6 @@ PrefabInstance:
       value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8084690918775442057, guid: 41caff7c9f0a709449843396ff90eb21, type: 3}
-      propertyPath: swingAngle
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 8084690918775442057, guid: 41caff7c9f0a709449843396ff90eb21, type: 3}
-      propertyPath: swingGravity
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8084690918775442057, guid: 41caff7c9f0a709449843396ff90eb21, type: 3}
-      propertyPath: rotationSpeed
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 8084690918775442057, guid: 41caff7c9f0a709449843396ff90eb21, type: 3}
       propertyPath: m_EditorClassIdentifier
       value: Assembly-CSharp::SpikedBallRotation
       objectReference: {fileID: 0}
