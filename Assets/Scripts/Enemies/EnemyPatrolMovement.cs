@@ -69,6 +69,12 @@ public class EnemyPatrolMovement : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+    private void OnEnable()
+    {
+        SFXManager.OnMasterSfxVolumeChanged += HandleMasterSfxVolumeChanged;
+        ApplyMovementLoopVolume();
+    }
+
     private void Start()
     {
         waitTimer = waitDuration;
@@ -233,7 +239,7 @@ public class EnemyPatrolMovement : MonoBehaviour
             movementLoopSource = gameObject.AddComponent<AudioSource>();
 
         movementLoopSource.clip = movementLoopClip;
-        movementLoopSource.volume = movementLoopVolume;
+        ApplyMovementLoopVolume();
         movementLoopSource.loop = true;
         movementLoopSource.playOnAwake = false;
 
@@ -249,8 +255,22 @@ public class EnemyPatrolMovement : MonoBehaviour
         movementLoopSource.Stop();
     }
 
+    private void ApplyMovementLoopVolume()
+    {
+        if (movementLoopSource == null)
+            return;
+
+        movementLoopSource.volume = movementLoopVolume * SFXManager.MasterSfxVolume;
+    }
+
+    private void HandleMasterSfxVolumeChanged(float volume)
+    {
+        ApplyMovementLoopVolume();
+    }
+
     private void OnDisable()
     {
+        SFXManager.OnMasterSfxVolumeChanged -= HandleMasterSfxVolumeChanged;
         StopMovementLoopSFX();
 
         if (animator != null && hasIdleParameter)

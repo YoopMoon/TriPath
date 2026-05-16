@@ -573,6 +573,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   destroyDuplicatedBackgrounds: 1
+  validScenePrefixes:
+  - Map1
 --- !u!1 &1979514142917895860
 GameObject:
   m_ObjectHideFlags: 0

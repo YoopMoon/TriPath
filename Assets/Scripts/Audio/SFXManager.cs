@@ -1,15 +1,21 @@
+using System;
 using UnityEngine;
 
 public class SFXManager : MonoBehaviour
 {
     public static SFXManager Instance { get; private set; }
+    public static float MasterSfxVolume { get; private set; } = DefaultMasterSfxVolume;
+    public static event Action<float> OnMasterSfxVolumeChanged;
 
     [Header("References")]
     [SerializeField] private AudioSource sfxSource;
 
     [Header("Volume Settings")]
     [Range(0f, 1f)]
-    [SerializeField] private float masterSfxVolume = 1f;
+    [SerializeField] private float masterSfxVolume = DefaultMasterSfxVolume;
+
+    private const float DefaultMasterSfxVolume = 0.5f;
+    private const string SfxVolumePrefsKey = "SfxVolume";
 
     private void Awake()
     {
@@ -21,6 +27,9 @@ public class SFXManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        masterSfxVolume = PlayerPrefs.GetFloat(SfxVolumePrefsKey, DefaultMasterSfxVolume);
+        MasterSfxVolume = masterSfxVolume;
 
         if (sfxSource != null)
         {
@@ -44,5 +53,14 @@ public class SFXManager : MonoBehaviour
     public void SetMasterSfxVolume(float volume)
     {
         masterSfxVolume = Mathf.Clamp01(volume);
+        MasterSfxVolume = masterSfxVolume;
+        PlayerPrefs.SetFloat(SfxVolumePrefsKey, masterSfxVolume);
+        PlayerPrefs.Save();
+        OnMasterSfxVolumeChanged?.Invoke(masterSfxVolume);
+    }
+
+    public float GetMasterSfxVolume()
+    {
+        return masterSfxVolume;
     }
 }

@@ -75,6 +75,11 @@ public class MusicManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float defaultVolume = 0.15f;
     [SerializeField] private float crossfadeDuration = 1.5f;
+    [Range(0f, 1f)]
+    [SerializeField] private float masterMusicVolume = DefaultMasterMusicVolume;
+
+    private const float DefaultMasterMusicVolume = 0.5f;
+    private const string MusicVolumePrefsKey = "MusicVolume";
 
     // AudioSource que está sonando actualmente.
     private AudioSource activeMusicSource;
@@ -104,6 +109,8 @@ public class MusicManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        masterMusicVolume = PlayerPrefs.GetFloat(MusicVolumePrefsKey, DefaultMasterMusicVolume);
+
         ConfigureAudioSource(firstMusicSource);
         ConfigureAudioSource(secondMusicSource);
 
@@ -113,7 +120,7 @@ public class MusicManager : MonoBehaviour
         currentTargetVolume = defaultVolume;
 
         if (activeMusicSource != null)
-            activeMusicSource.volume = currentTargetVolume;
+            activeMusicSource.volume = GetFinalMusicVolume(currentTargetVolume);
 
         if (inactiveMusicSource != null)
             inactiveMusicSource.volume = 0f;
@@ -304,7 +311,7 @@ public class MusicManager : MonoBehaviour
             float t = timer / crossfadeDuration;
 
             activeMusicSource.volume = Mathf.Lerp(startActiveVolume, 0f, t);
-            inactiveMusicSource.volume = Mathf.Lerp(0f, targetVolume, t);
+            inactiveMusicSource.volume = Mathf.Lerp(0f, GetFinalMusicVolume(targetVolume), t);
 
             yield return null;
         }
@@ -313,7 +320,7 @@ public class MusicManager : MonoBehaviour
         activeMusicSource.clip = null;
         activeMusicSource.volume = 0f;
 
-        inactiveMusicSource.volume = targetVolume;
+        inactiveMusicSource.volume = GetFinalMusicVolume(targetVolume);
 
         SwapAudioSources();
 
@@ -383,7 +390,27 @@ public class MusicManager : MonoBehaviour
         currentTargetVolume = Mathf.Clamp01(volume);
 
         if (activeMusicSource != null)
-            activeMusicSource.volume = currentTargetVolume;
+            activeMusicSource.volume = GetFinalMusicVolume(currentTargetVolume);
+    }
+
+    public void SetMasterMusicVolume(float volume)
+    {
+        masterMusicVolume = Mathf.Clamp01(volume);
+        PlayerPrefs.SetFloat(MusicVolumePrefsKey, masterMusicVolume);
+        PlayerPrefs.Save();
+
+        if (activeMusicSource != null)
+            activeMusicSource.volume = GetFinalMusicVolume(currentTargetVolume);
+    }
+
+    public float GetMasterMusicVolume()
+    {
+        return masterMusicVolume;
+    }
+
+    private float GetFinalMusicVolume(float baseVolume)
+    {
+        return Mathf.Clamp01(baseVolume) * masterMusicVolume;
     }
 
     public void StopMusic()
@@ -413,18 +440,20 @@ public class MusicManager : MonoBehaviour
 
     public void PauseMusic()
     {
-        if (activeMusicSource == null)
-            return;
+        if (activeMusicSource != null)
+            activeMusicSource.Pause();
 
-        activeMusicSource.Pause();
+        if (inactiveMusicSource != null)
+            inactiveMusicSource.Pause();
     }
 
     public void ResumeMusic()
     {
-        if (activeMusicSource == null)
-            return;
+        if (activeMusicSource != null && activeMusicSource.clip != null)
+            activeMusicSource.UnPause();
 
-        activeMusicSource.Play();
+        if (inactiveMusicSource != null && inactiveMusicSource.clip != null)
+            inactiveMusicSource.UnPause();
     }
 
     private readonly struct MusicSelection

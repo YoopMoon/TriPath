@@ -17955,6 +17955,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PersistentBackground
   destroyDuplicatedBackgrounds: 1
+  validScenePrefixes:
+  - Map2
 --- !u!1001 &8589337640087126758
 PrefabInstance:
   m_ObjectHideFlags: 0
