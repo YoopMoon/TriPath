@@ -7792,18 +7792,54 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2795551082963767334, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2795551082963767334, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoToCharacterSelectScene
-      objectReference: {fileID: 0}
     - target: {fileID: 2989056629297696058, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1118845722}
+    - target: {fileID: 3234968432534298239, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.6296296
+      objectReference: {fileID: 0}
+    - target: {fileID: 3234968432534298239, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3234968432534298239, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.6296296
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541097788964617680, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.6296296
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541097788964617680, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5840045972835431775, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.6296296
+      objectReference: {fileID: 0}
+    - target: {fileID: 5840045972835431775, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6127865045841916789, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8391558512323643210, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.6296296
+      objectReference: {fileID: 0}
+    - target: {fileID: 8391558512323643210, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8391558512323643210, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.6296296
+      objectReference: {fileID: 0}
     - target: {fileID: 8891555926498477020, guid: 5e03dfc758244c347b18d71a9f3d0481, type: 3}
       propertyPath: m_Name
       value: MenuPause
