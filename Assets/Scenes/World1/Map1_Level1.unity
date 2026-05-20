@@ -788,10 +788,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManagers
       objectReference: {fileID: 0}
-    - target: {fileID: 8177311077576234421, guid: a245cf87e5884ac4d9027456d80d7761, type: 3}
-      propertyPath: 'sceneGroupMusicEntries.Array.data[0].sceneNames.Array.data[2]'
-      value: HowToPlayWorld2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
