@@ -67,9 +67,9 @@ public class RankingPlayersMenu : MonoBehaviour
         if (emptyRankingText != null)
             emptyRankingText.gameObject.SetActive(!hasEntries);
 
-        int rowsToShow = Mathf.Min(entries.Count, maxRankingRows) - 1;
+        int rowsToShow = Mathf.Min(entries.Count, maxRankingRows);
 
-        for (int i = 0; i <= rowsToShow; i++)
+        for (int i = 0; i < rowsToShow; i++)
         {
             Debug.Log("Entrada");
             RankingRowUI row = Instantiate(rankingRowPrefab, rankingContainer);

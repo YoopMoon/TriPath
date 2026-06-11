@@ -515,7 +515,7 @@ MonoBehaviour:
   rankingContainer: {fileID: 87638036}
   rankingRowPrefab: {fileID: 1301729003}
   emptyRankingText: {fileID: 0}
-  maxRankingRows: 10
+  maxRankingRows: 5
   mainMenuButton: {fileID: 1339344614}
   exitButton: {fileID: 1108215514}
   clearRankingButton: {fileID: 752116695}
